@@ -1,9 +1,8 @@
 import numpy
 import datetime
 import re
-from emr_fs.transformation_function import TransformationFunction
-from emr_fs.engine.hive import FeatureStoreHiveEngine
-from emr_fs.statistics_config import StatisticsConfig
+from func.transformation_function import TransformationFunction
+from engine.spark import FeatureStoreSparkEngine
 
 
 class FeatureStore:
@@ -26,7 +25,7 @@ class FeatureStore:
             feature_eventtime_key = ""
             features = []
 
-            matchObj = re.findall(r'[(](.*?)[)]', str1)[0]
+            matchObj = re.findall(r'[(](.*?)[)]', feature_group_info)[0]
             tableColumns = matchObj[0]
             tablePros = matchObj[1]
 

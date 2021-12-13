@@ -66,11 +66,11 @@ class Query:
 
 
     def create_training_dataset(self,
-            name = “userProfile dataset",
-            data_format = "tfrecord",
-            startDt="2020-10-20 07:31:38",
-            endDt= "2020-10-20 07:34:11“,
-            outputLoc = "s3://emr_fs/output/userProfile"):
+            name,
+            data_format
+            startDt,
+            endDt,
+            outputLoc):
         timeQuery(startDt,engine)
         full_query = self.pareseSql()
         df = self._engine.query(full_query)
