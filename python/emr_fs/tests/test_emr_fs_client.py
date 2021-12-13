@@ -1,5 +1,6 @@
-from emr_fs.feature_store import FeatureStore
-from emr_fs.client import Client
+sys.path.append('../')
+from feature_store import FeatureStore
+from client import Client
 
 if __name__ == '__main__':
    client=Client()
