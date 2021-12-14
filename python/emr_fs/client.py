@@ -21,7 +21,7 @@ class Client(object):
         self.logger = Log("console")
 
     def create_feature_store(name,s3_location_path,desc):
-        self._feature_store = FeatureStore(emr_master_node,name,s3_location_path,desc)
+        self._feature_store = FeatureStore(name,s3_location_path,desc)
         self._feature_store.create_feature_store()
         return self._feature_store
 

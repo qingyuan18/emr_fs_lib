@@ -19,7 +19,7 @@ class FeatureStore:
 
 
     def get_feature_group(self, name: str):
-        with FeatureStoreSparkEngine(emr_master_node) as engine:
+        with FeatureStoreSparkEngine() as engine:
             feature_group_info =  engine.get_feature_group(name)
             feature_unique_key = ""
             feature_partition_key = ""
@@ -55,7 +55,7 @@ class FeatureStore:
         #        name=self._name,
         #        desc=self._description,
         #        location=self._s3_store_path)
-        with FeatureStoreSparkEngine(emr_master_node) as engine:
+        with FeatureStoreSparkEngine() as engine:
                    engine.create_feature_store(
                         name=self._name,
                         desc=self._description,
@@ -80,7 +80,7 @@ class FeatureStore:
        #           feature_partition_key,feature_partition_key_type,
        #           feature_normal_keys)
        #            )
-       with FeatureStoreSparkEngine(emr_master_node) as engine:
+       with FeatureStoreSparkEngine() as engine:
              engine.register_feature_group(feature_store_name=self.feature_store_name,feature_group_name, desc,
                   feature_unique_key,feature_unique_key_type,
                   feature_partition_key,feature_partition_key_type,
