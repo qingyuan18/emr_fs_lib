@@ -30,10 +30,10 @@ class FeatureStoreSparkEngine:
     def __enter__(self):
         return self
 
-    def __exit__(self):
-        pass
+    def __exit__(self, exc_type, exc_value, tb):
+        return True
 
-    def create_feature_store(name, desc, location):
+    def create_feature_store(self,name, desc, location):
         sql="create database if not exists @emr_feature_store@ comment 'emr_feature_store for sagemaker' location @DBLocation@;".replace("@emr_feature_store@",name).replace("@DBLocation@",location)
         if description  is not None:
            sql.replace("emr_feature_store for sagemaker",desc)

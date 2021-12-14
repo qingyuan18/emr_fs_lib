@@ -57,7 +57,7 @@ class FeatureStore:
         #        location=self._s3_store_path)
         with FeatureStoreSparkEngine() as engine:
             engine.create_feature_store(self._name,self._description,self._s3_store_path)
-        return FeatureStore(name,desc,location)
+        return FeatureStore(self._name,self._description,self._s3_store_path)
 
 
     def register_feature_group(
