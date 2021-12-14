@@ -1,6 +1,7 @@
+import sys
 sys.path.append('../')
-from feature_store import FeatureStore
-from client import Client
+from emr_fs.feature_store import FeatureStore
+from emr_fs.client import Client
 
 if __name__ == '__main__':
    client=Client()
@@ -10,10 +11,10 @@ if __name__ == '__main__':
    emr_fs01 = client.connect_to_feature_store("emr_feature_store")
 
    #test create feature group
-   features01={"customer_id":"int","city_code":"int","state_code":"int","country_code":"int","dt","timestamp","identify_code","int"}
+   features01={"customer_id":"int","city_code":"int","state_code":"int","country_code":"int","dt":"timestamp","identify_code":"int"}
    emr_fg01 = client.create_feature_group("customer_base","","customer_id","dt",features01)
 
-   features02 = {"customer_id":"int",	"age":"int","diabetes":"int","ejection_fraction":"int",	"high_blood_pressure":"int","platelets":"int","sex":"int","smoking":"init","DEATH_EVENT":"int","dt","timestamp"}
+   features02 = {"customer_id":"int",	"age":"int","diabetes":"int","ejection_fraction":"int",	"high_blood_pressure":"int","platelets":"int","sex":"int","smoking":"init","DEATH_EVENT":"int","dt":"timestamp"}
    emr_fg02 = client.create_feature_group("customer_advance","","customer_id","dt",features02)
 
    #test feature group ingestion
@@ -33,7 +34,7 @@ if __name__ == '__main__':
    emr_fg02.create_training_dataset(name = "userProfile dataset",
                data_format = "tfrecord",
                startDt="20211201000000",
-               endDt= "20211216000000“,
+               endDt= "20211216000000",
                outputLoc = "s3://emrfssampledata/traindataset/output.tfrecord/")
 
 

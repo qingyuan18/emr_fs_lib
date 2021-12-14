@@ -25,12 +25,15 @@ class FeatureStoreSparkEngine:
     def __init__(self):
         self._spark_session = SparkSession.builder.appName("emr_feature_store app").enableHiveSupport().getOrCreate()
         self._spark_context = self._spark_session.sparkContext
-        self._jvm = self._spark_context._jvm
-
         self._spark_session.conf.set("hive.exec.dynamic.partition", "true")
         self._spark_session.conf.set("hive.exec.dynamic.partition.mode", "nonstrict")
         self._spark_session.conf.set("spark.sql.hive.convertMetastoreParquet", "false")
 
+    def __enter__(self):
+        pass
+
+    def __exit__(self):
+        pass
 
     def create_feature_store(name, desc, location):
         sql="create database if not exists @emr_feature_store@ comment 'emr_feature_store for sagemaker' location @DBLocation@;".replace("@emr_feature_store@",name).replace("@DBLocation@",location)
