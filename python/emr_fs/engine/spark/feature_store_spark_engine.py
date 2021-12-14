@@ -30,7 +30,7 @@ class FeatureStoreSparkEngine:
         self._spark_session.conf.set("spark.sql.hive.convertMetastoreParquet", "false")
 
     def __enter__(self):
-        pass
+        return self
 
     def __exit__(self):
         pass

@@ -18,9 +18,9 @@ class FeatureStore:
 
 
 
-    def get_feature_group(self, name: str):
+    def get_feature_group(self, feature_store_name,feature_group_name):
         with FeatureStoreSparkEngine() as engine:
-            feature_group_info =  engine.get_feature_group(name)
+            feature_group_info =  engine.get_feature_group(feature_store_name,feature_group_name)
             feature_unique_key = ""
             feature_partition_key = ""
             features = []
@@ -48,7 +48,7 @@ class FeatureStore:
 
 
     def create_feature_store(self):
-            """Create a feature store db in hive metadata."""
+        """Create a feature store db in hive metadata."""
         #with FeatureStoreHiveEngine(emr_master_node) as engine:
         #   engine.create_feature_store(
         #        master_node=self._emr_master_node,
@@ -56,10 +56,7 @@ class FeatureStore:
         #        desc=self._description,
         #        location=self._s3_store_path)
         with FeatureStoreSparkEngine() as engine:
-                   engine.create_feature_store(
-                        name=self._name,
-                        desc=self._description,
-                        location=self._s3_store_path)
+            engine.create_feature_store(name=self._name,desc=self._description,location=self._s3_store_path)
         return FeatureStore(name,desc,location)
 
 
@@ -82,10 +79,10 @@ class FeatureStore:
        #            )
        with FeatureStoreSparkEngine() as engine:
              engine.register_feature_group(feature_store_name=self.feature_store_name,feature_group_name, desc,
-                  feature_unique_key,feature_unique_key_type,
-                  feature_partition_key,feature_partition_key_type,
-                  feature_normal_keys)
-                   )
+                  feature_unique_key,
+                  feature_partition_key)
+             return get_feature_group(self._name, feature_group_name)
+
 
 
 
@@ -108,7 +105,7 @@ class FeatureStore:
         #           feature_normal_keys)
         #    )
         with FeatureStoreSparkEngine(emr_master_node) as engine:
-                    engine.create_feature_group(feature_store_name=self.feature_store_name,feature_group_name, desc,
+             engine.create_feature_group(feature_store_name=self.feature_store_name,feature_group_name, desc,
                           feature_unique_key,feature_unique_key_type,
                           feature_partition_key,feature_partition_key_type,
                           feature_normal_keys)
