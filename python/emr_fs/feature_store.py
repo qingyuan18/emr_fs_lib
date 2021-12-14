@@ -1,8 +1,8 @@
 import numpy
 import datetime
 import re
-from func.transformation_function import TransformationFunction
-from engine.spark import FeatureStoreSparkEngine
+from emr_fs.func.transformation_function import TransformationFunction
+from emr_fs.engine.spark.feature_store_spark_engine import FeatureStoreSparkEngine
 
 
 class FeatureStore:
@@ -56,16 +56,16 @@ class FeatureStore:
         #        desc=self._description,
         #        location=self._s3_store_path)
         with FeatureStoreSparkEngine() as engine:
-            engine.create_feature_store(name=self._name,desc=self._description,location=self._s3_store_path)
+            engine.create_feature_store(self._name,self._description,self._s3_store_path)
         return FeatureStore(name,desc,location)
 
 
     def register_feature_group(
         self,
-        feature_group_name: str,
-        desc: str = "",
-        feature_unique_key: str,
-        feature_partition_key: str,
+        feature_group_name,
+        desc,
+        feature_unique_key,
+        feature_partition_key
     ):
        """register a feature group metadata object in a exsiting hudi table.
             # Returns
@@ -78,7 +78,7 @@ class FeatureStore:
        #           feature_normal_keys)
        #            )
        with FeatureStoreSparkEngine() as engine:
-             engine.register_feature_group(feature_store_name=self.feature_store_name,feature_group_name, desc,
+             engine.register_feature_group(self._name,feature_group_name, desc,
                   feature_unique_key,
                   feature_partition_key)
              return get_feature_group(self._name, feature_group_name)
@@ -88,11 +88,11 @@ class FeatureStore:
 
     def create_feature_group(
         self,
-        feature_group_name: str,
-        desc: str = "",
-        feature_unique_key: str,
-        feature_partition_key: str,
-        feature_keys:  = {}
+        feature_group_name,
+        desc,
+        feature_unique_key,
+        feature_partition_key,
+        feature_keys
     ):
         """Create a feature group metadata object.
         # Returns
@@ -105,11 +105,10 @@ class FeatureStore:
         #           feature_normal_keys)
         #    )
         with FeatureStoreSparkEngine(emr_master_node) as engine:
-             engine.create_feature_group(feature_store_name=self.feature_store_name,feature_group_name, desc,
-                          feature_unique_key,feature_unique_key_type,
-                          feature_partition_key,feature_partition_key_type,
+             engine.create_feature_group(self._name,feature_group_name, desc,
+                          feature_unique_key,
+                          feature_partition_key,
                           feature_normal_keys)
-                   )
         features = pares_features(feature_keys)
         return FeatureGroup(feature_group_name,desc,feature_unique_key,feature_partition_key,features)
 

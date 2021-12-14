@@ -2,7 +2,6 @@ import json
 import datetime
 import importlib.util
 import numpy as np
-import pandas as pd
 
 # in case importing in %%local
 try:
@@ -13,8 +12,7 @@ try:
 except ImportError:
     pass
 from emr_fs.exceptions import FeatureStoreException
-from emr_fs.engine import hudi_engine
-from emr_fs.constructor import query
+from emr_fs.func import query
 
 
 class FeatureStoreSparkEngine:
@@ -89,7 +87,7 @@ class FeatureStoreSparkEngine:
           'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat'
         TBLPROPERTIES (@tableProps@)"""
 
-        tableProps="'feature_unique_key'='"+feature_unique_key"',"
+        tableProps="'feature_unique_key'='"+feature_unique_key+"',"
         tableProps=tableProps+"'feature_partition_key='"+feature_partition_key+"'"
         partition_keys=feature_partition_key+" "+feature_partition_key_type
         columns=""
@@ -117,8 +115,8 @@ class FeatureStoreSparkEngine:
         sql = "alter table "+feature_store_name+"."+feature_group_name+" add column ('"+new_feature_key+","+new_feature_key_type+"');"
         try:
            df=self._spark_session.sql(sql)
-           self.logger.info("add new_feature :"+new_feature_key+":"+new_feature_key_type+" in "+feature_group_name+"."+fe
-        exceptions Exception as e:
+           self.logger.info("add new_feature :"+new_feature_key+":"+new_feature_key_type+" in "+feature_group_name)
+        except Exception as e:
            raise FeatureStoreException(
                            "Error add new feature:" + str(e)
                        )
@@ -136,11 +134,8 @@ class FeatureStoreSparkEngine:
             hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
             dataframe = _spark_session.read.format("org.apache.hudi").load(source_s3_location)
             try:
-                dataframe.write.format("hudi"). \
-                     	options(**hudi_options). \
-                     	mode("append"). \
-                     	save(feature_group_location)
-            exceptions Exception as e::
+                dataframe.write.format("hudi").options(**hudi_options).mode("append").save(feature_group_location)
+            except  Exception as e:
                 raise FeatureStoreException(
                     "Error writing to offline feature group :" + str(e)
                 )
@@ -158,11 +153,8 @@ class FeatureStoreSparkEngine:
         hudi_engine = HudiEngine(feature_group,self._spark_context,self._spark_session)
         hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
         try:
-            dataframe.write.format("hudi"). \
-                 	options(**hudi_options). \
-                 	mode("append"). \
-                 	save(feature_group_location)
-        exceptions Exception as e::
+            dataframe.write.format("hudi").options(**hudi_options).mode("append").save(feature_group_location)
+        except Exception as e:
             raise FeatureStoreException(
                 "Error writing to offline feature group :" + str(e)
             )

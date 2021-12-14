@@ -1,6 +1,6 @@
 import json
 import re
-from emr_fs import util
+from emr_fs.common.util import *
 
 
 class Feature:

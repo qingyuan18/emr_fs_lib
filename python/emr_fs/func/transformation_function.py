@@ -1,5 +1,5 @@
 from pyspark.mllib.util import MLUtils
-from emr_fs import util
+from emr_fs.common import *
 from pyspark.context import SparkContext, SparkConf
 
 

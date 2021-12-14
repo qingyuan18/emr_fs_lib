@@ -1,5 +1,4 @@
 import sys
-sys.path.append('../')
 from emr_fs.feature_store import FeatureStore
 from emr_fs.client import Client
 

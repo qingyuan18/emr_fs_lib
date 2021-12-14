@@ -1,26 +1,4 @@
-#
-#   Copyright 2020 Logical Clocks AB
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
-
-
-import pandas as pd
 import numpy as np
-import avro.schema
-
-from emr_fs import  engine, feature, user, storage_connector as sc
-from emr_fs.engine.hive.feature_store_hive_engine import FeatureStoreHiveEngine
 from emr_fs.engine.spark.feature_store_spark_engine import FeatureStoreSparkEngine
 
 
@@ -48,7 +26,7 @@ class FeatureGroup:
             `Query`. A query object with all features of the feature group.
         """
 
-           self._query.select_all()
+        self._query.select_all()
         return self._query
 
     def timeQuery(self,beginTimeStamp,endTimeStamp):
@@ -57,9 +35,9 @@ class FeatureGroup:
            self._query.timeQuery(beginTimeStamp,endTimeStamp)
         return self._query
 
-    def select(self, features:= []):
-        """Select a subset of features of the feature group and return a query object.
-        """
+    def select(self, features):
+       """Select a subset of features of the feature group and return a query object.
+       """
        if self._query is None:
           self._query = Query(self.feature_store,self,'spark',None)
        return self.query.select(features)
@@ -77,7 +55,7 @@ class FeatureGroup:
                            self._feature_partition_key)
 
     def ingestion(self,source_dataset_location):
-           """use spark engine(which will use hudi engine internal) to ingest  into feature group"""
+       """use spark engine(which will use hudi engine internal) to ingest  into feature group"""
        feature_group_location = self._feature_store.s3_store_path()+"/"+self._feature_group_name+"/"
        with FeatureStoreSparkEngine() as engine:
             engine.save_s3_dataset(
@@ -91,7 +69,7 @@ class FeatureGroup:
 
     def create_training_dataset(self,
             name ,
-            data_format = "tfrecord",
+            data_format,
             startDt,
             endDt,
             outputLoc ):
@@ -145,11 +123,3 @@ class FeatureGroup:
     @primary_key.setter
     def primary_key(self, new_primary_key):
         self._primary_key = [pk.lower() for pk in new_primary_key]
-
-
-
-
-
-
-
-

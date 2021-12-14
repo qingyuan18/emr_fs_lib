@@ -1,17 +1,16 @@
 import json
-import humps
-from typing import Optional, List, Union
+import sys
+sys.path.append("../engine/spark/")
+sys.path.append("../common/")
+sys.path.append("../func/")
 
-from emr_fs import util, engine
-from emr_fs.core import query_constructor_api, storage_connector_api
-from emr_fs.constructor import join, filter
 
 
 class Query:
     def __init__(
         self,
-        feature_store=None,
-        feature_group=None,
+        feature_store,
+        feature_group,
         engine_type='spark',
         emr_master_node=None
     ):
@@ -26,20 +25,20 @@ class Query:
         self._engine = SparkEngine()
         if engine.get_type() == "spark":
            self._engine = FeatureStoreSparkEngine()
-        else
+        else:
            self._engine=FeatureStoreHiveEngine(emr_master_node)
 
     def select_all(self):
-         """select all the feature group dataset.
-         """
-         self._features.append(self.feature_group._features)
-         return self
+        """select all the feature group dataset.
+        """
+        self._features.append(self.feature_group._features)
+        return self
 
     def select(self,features=[]):
-         """select subset of the feature group dataset.
-         """
-         self._features.append(features)
-         return self
+        """select subset of the feature group dataset.
+        """
+        self._features.append(features)
+        return self
 
 
     def pareseSql(self):
@@ -47,18 +46,15 @@ class Query:
         for feature in self._features:
            full_query = full_query + feature.get_feature_group+"."+feature.feature_name + ","
         full_query = full_query + " from " + self._feature_group.get_feature_group_name()
-        for  join_feature_group in self._join_feature_groups
-            full_query = full_query+ " left join "+join_feature_group.get_feature_group_name() +
+        for  join_feature_group in self._join_feature_groups:
+            full_query = full_query+ " left join "+join_feature_group.get_feature_group_name() +\
                                      " on "+self._feature_group.get_feature_group_name + "." + self._feature_group.get_feature_unique_key +"="+self._join_feature_group_keys[join_feature_group.get_feature_group_name()]
             full_query = full_query + ","
         full_query=" where "+self._sqlWhere
         return full_query
 
     def show(self,lines:int):
-         """Show the first N rows of the Query.
-        # Arguments
-            n: Number of rows to show.
-            online: Show from online storage. Defaults to `False`.
+        """Show the first N rows of the Query.
         """
         full_query = self.pareseSql()
         return self._engine.show(full_query,lines)
@@ -67,7 +63,7 @@ class Query:
 
     def create_training_dataset(self,
             name,
-            data_format
+            data_format,
             startDt,
             endDt,
             outputLoc):
@@ -79,7 +75,7 @@ class Query:
 
 
 
-    def join(self,Query query,join_key=None):
+    def join(self,query,join_key):
         """join other query
         # Arguments
             query: another query instance.

@@ -1,8 +1,3 @@
-import warnings
-
-from emr_fs import engine, client, util, exceptions
-from emr_fs import feature_group as fg
-from emr_fs.engine.feature_group_base_engine import FeatureBaseEngine
 from pyhive import hive
 from util import *
 import pandas as pd
@@ -45,24 +40,24 @@ class FeatureStoreHiveEngine(feature_group_base_engine.FeatureBaseEngine):
                              features):
         cursor = self._con.cursor()
         cursor.execute("use "+feature_store_name+";")
-        sql="CREATE EXTERNAL TABLE @feature_group_nm@( \n"+
-          "`_hoodie_commit_time` string,\n"+
-          "`_hoodie_commit_seqno` string,\n"+
-          "`_hoodie_record_key` string,\n"+
-          "`_hoodie_partition_path` string,\n"+
-          "`_hoodie_file_name` string,\n"+
-          "@features@)\n"+
-        "PARTITIONED BY (\n"+
-        "  @feature_partitions@)\n"+
-        "ROW FORMAT SERDE\n"+
-        "  'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'\n"+
-        "STORED AS INPUTFORMAT\n"+
-        "  'org.apache.hudi.hadoop.HoodieParquetInputFormat' \n"+
-        "OUTPUTFORMAT \n"+
-        "  'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat' \n"+
+        sql="CREATE EXTERNAL TABLE @feature_group_nm@( "+\
+          "`_hoodie_commit_time` string,"+\
+          "`_hoodie_commit_seqno` string,"+\
+          "`_hoodie_record_key` string,"+\
+          "`_hoodie_partition_path` string,"+\
+          "`_hoodie_file_name` string,"+\
+          "@features@)"+\
+        "PARTITIONED BY ("+\
+        "  @feature_partitions@) "+\
+        "ROW FORMAT SERDE "+\
+        "  'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe' "+\
+        "STORED AS INPUTFORMAT "+\
+        "  'org.apache.hudi.hadoop.HoodieParquetInputFormat' "+\
+        "OUTPUTFORMAT "+\
+        "  'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat' "+\
         "TBLPROPERTIES (@tableProps@)"
 
-        tableProps="'feature_unique_key'='"+feature_unique_key"',"
+        tableProps="'feature_unique_key'='"+feature_unique_key+"',"
         tableProps=tableProps+"'feature_partition_key='"+feature_partition_key+"'"
         partition_keys=feature_partition_key+" "+feature_partition_key_type
         columns=""
