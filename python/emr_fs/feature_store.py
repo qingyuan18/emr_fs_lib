@@ -30,12 +30,11 @@ class FeatureStore:
             tablePros = matchObj[1]
 
             for property in tablePros:
-                if property.contains('feature_unique_key'):
+                if 'feature_unique_key' in property:
                    feature_unique_key=property.split("=")[1]
-                elif property.contains("feature_partition_key"):
+                elif 'feature_partition_key' in property:
                    feature_partition_key=property.split("=")[1]
 
-            tableColumns = re.findMatch(feature_group_info,name+"(*)")
             for column in tableColumns:
                 name = column.split(" ")[0]
                 type = column.split(" ")[1]
