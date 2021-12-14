@@ -18,4 +18,4 @@ STORED AS INPUTFORMAT \
   'org.apache.hudi.hadoop.HoodieParquetInputFormat' \
 OUTPUTFORMAT \
   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat' \
-TBLPROPERTIES ('feature_unique_key'='customer_id','feature_eventtime_key'='dt')
+TBLPROPERTIES ('feature_unique_key'='customer_id','feature_partition_key'='dt')

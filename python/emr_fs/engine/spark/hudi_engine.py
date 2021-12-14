@@ -55,14 +55,14 @@ class HudiEngine:
         self._spark_session = spark_session
 
         self._partition_key = (
-            ",".join(feature_group._feature_eventtime_key)
-            if len(feature_group._feature_eventtime_key) >= 1
+            ",".join(feature_group._feature_partition_key)
+            if len(feature_group._feature_partition_key) >= 1
             else ""
         )
 
         self._pre_combine_key = (
-            feature_group._feature_eventtime_key
-            if feature_group._feature_eventtime_key
+            feature_group._feature_partition_key
+            if feature_group._feature_partition_key
             else feature_group.primary_key[0]
         )
 

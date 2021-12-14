@@ -26,12 +26,12 @@ class FeatureStoreHiveEngine(feature_group_base_engine.FeatureBaseEngine):
     def register_feature_group(self,
                              feature_store_name,feature_group_name, desc,
                              feature_unique_key,
-                             feature_eventtime_key):
+                             feature_partition_key):
         cursor = self._con.cursor()
         cursor.execute("use "+feature_store_name+";")
         sql = "alter table  @feature_group_nm@ set tblproperties ('feature_unique_key'='@feature_unique_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_unique_key@",feature_unique_key)
         cursor.execute(sql)
-        sql = "alter table  @feature_group_nm@ set tblproperties ('feature_eventtime_key'='@feature_eventtime_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_eventtime_key@",feature_eventtime_key)
+        sql = "alter table  @feature_group_nm@ set tblproperties ('feature_partition_key'='@feature_partition_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_partition_key@",feature_partition_key)
         cursor.execute(sql)
         self.logger.info("register emr feature group "+feature_group_name + "in "+ feature_store_name+" result:")
         for result in cursor.fetchall():
@@ -41,7 +41,7 @@ class FeatureStoreHiveEngine(feature_group_base_engine.FeatureBaseEngine):
     def create_feature_group(self,
                              feature_store_name,feature_group_name, desc,
                              feature_unique_key,
-                             feature_eventtime_key,
+                             feature_partition_key,
                              features):
         cursor = self._con.cursor()
         cursor.execute("use "+feature_store_name+";")
@@ -64,7 +64,7 @@ class FeatureStoreHiveEngine(feature_group_base_engine.FeatureBaseEngine):
 
         tableProps="'feature_unique_key'='"+feature_unique_key"',"
         tableProps=tableProps+"'feature_partition_key='"+feature_partition_key+"'"
-        partition_keys=feature_eventtime_key+" "+feature_eventtime_key_type
+        partition_keys=feature_partition_key+" "+feature_partition_key_type
         columns=""
         for feature in features:
            columns.append(feature[0]+" "+feature[1]+",\n")

@@ -51,11 +51,11 @@ class FeatureStoreSparkEngine:
     def register_feature_group(self,
                                  feature_store_name,feature_group_name, desc,
                                  feature_unique_key,
-                                 feature_eventtime_key):
+                                 feature_partition_key):
         self._spark_session.sql("use "+feature_store_name+";")
         sql = "alter table  @feature_group_nm@ set tblproperties ('feature_unique_key'='@feature_unique_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_unique_key@",feature_unique_key)
         self._spark_session.sql(sql)
-        sql = "alter table  @feature_group_nm@ set tblproperties ('feature_eventtime_key'='@feature_eventtime_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_eventtime_key@",feature_eventtime_key)
+        sql = "alter table  @feature_group_nm@ set tblproperties ('feature_partition_key'='@feature_partition_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_partition_key@",feature_partition_key)
         df=self._spark_session.sql(sql)
         self.logger.info("register emr feature group "+feature_group_name + "in "+ feature_store_name+" result:")
         for line in df.collect():
@@ -65,7 +65,7 @@ class FeatureStoreSparkEngine:
     def create_feature_group(self,
                                  feature_store_name,feature_group_name, desc,
                                  feature_unique_key,
-                                 feature_eventtime_key,
+                                 feature_partition_key,
                                  features):
 
         self._spark_session.sql("use "+feature_store_name+";")
@@ -88,7 +88,7 @@ class FeatureStoreSparkEngine:
 
         tableProps="'feature_unique_key'='"+feature_unique_key"',"
         tableProps=tableProps+"'feature_partition_key='"+feature_partition_key+"'"
-        partition_keys=feature_eventtime_key+" "+feature_eventtime_key_type
+        partition_keys=feature_partition_key+" "+feature_partition_key_type
         columns=""
         for feature in features:
            columns.append(feature[0]+" "+feature[1]+",\n")
@@ -127,10 +127,10 @@ class FeatureStoreSparkEngine:
             source_s3_location,
             operation,
             feature_unique_key,
-            feature_eventtime_key
+            feature_partition_key
         ):
             hudi_engine = HudiEngine(feature_group,self._spark_context,self._spark_session)
-            hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_eventtime_key,pre_combine_key=feature_eventtime_key)
+            hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
             dataframe = _spark_session.read.format("org.apache.hudi").load(source_s3_location)
             try:
                 dataframe.write.format("hudi"). \
@@ -150,10 +150,10 @@ class FeatureStoreSparkEngine:
         dataframe,
         operation,
         feature_unique_key,
-        feature_eventtime_key
+        feature_partition_key
     ):
         hudi_engine = HudiEngine(feature_group,self._spark_context,self._spark_session)
-        hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_eventtime_key,pre_combine_key=feature_eventtime_key)
+        hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
         try:
             dataframe.write.format("hudi"). \
                  	options(**hudi_options). \

@@ -36,9 +36,9 @@ class Client(object):
         else:
            return self._feature_store.get_feature_group(name)
 
-    def create_feature_group(name,desc,feature_unique_key,feature_eventtime_key,features):
+    def create_feature_group(name,desc,feature_unique_key,feature_partition_key,features):
          if self._feature_store is None:
             self.logger.error("not connected to a feature_store")
             return None
          else:
-            return self._feature_store.create_feature_group(name,feature_unique_key,feature_eventtime_key,features)
+            return self._feature_store.create_feature_group(name,feature_unique_key,feature_partition_key,features)

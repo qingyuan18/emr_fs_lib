@@ -26,12 +26,12 @@ from emr_fs.engine.spark.feature_store_spark_engine import FeatureStoreSparkEngi
 
 
 class FeatureGroup:
-    def __init__(self, feature_store,feature_group_name,feature_group_desc,feature_unique_key,feature_eventtime_key,features):
+    def __init__(self, feature_store,feature_group_name,feature_group_desc,feature_unique_key,feature_partition_key,features):
         self._feature_store = feature_store
         self._feature_group_name = feature_group_name
         self._feature_group_desc = feature_group_desc
         self._feature_unique_key = feature_unique_key
-        self._feature_eventtime_key = feature_eventtime_key
+        self._feature_partition_key = feature_partition_key
         self._features = features
         self._query = None
 
@@ -74,7 +74,7 @@ class FeatureGroup:
                            dataframe,
                            "append",
                            self._feature_unique_key,
-                           self._feature_eventtime_key)
+                           self._feature_partition_key)
 
     def ingestion(self,source_dataset_location):
            """use spark engine(which will use hudi engine internal) to ingest  into feature group"""
@@ -86,7 +86,7 @@ class FeatureGroup:
                            source_dataset_location,
                            "overwrite",
                            self._feature_unique_key,
-                           self._feature_eventtime_key)
+                           self._feature_partition_key)
 
 
     def create_training_dataset(self,

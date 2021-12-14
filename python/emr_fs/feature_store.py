@@ -22,7 +22,7 @@ class FeatureStore:
         with FeatureStoreSparkEngine(emr_master_node) as engine:
             feature_group_info =  engine.get_feature_group(name)
             feature_unique_key = ""
-            feature_eventtime_key = ""
+            feature_partition_key = ""
             features = []
 
             matchObj = re.findall(r'[(](.*?)[)]', feature_group_info)[0]
@@ -32,8 +32,8 @@ class FeatureStore:
             for property in tablePros:
                 if property.contains('feature_unique_key'):
                    feature_unique_key=property.split("=")[1]
-                else property.contains("feature_eventtime_key"):
-                   feature_eventtime_key=property.split("=")[1]
+                elif property.contains("feature_partition_key"):
+                   feature_partition_key=property.split("=")[1]
 
             tableColumns = re.findMatch(feature_group_info,name+"(*)")
             for column in tableColumns:
@@ -42,7 +42,7 @@ class FeatureStore:
                 feature = Feature(name,type)
                 features.append(feature)
 
-            feature_group = FeatureGroup(self,name,"",feature_unique_key,feature_eventtime_key,features)
+            feature_group = FeatureGroup(self,name,"",feature_unique_key,feature_partition_key,features)
         return feature_group
 
 
@@ -69,7 +69,7 @@ class FeatureStore:
         feature_group_name: str,
         desc: str = "",
         feature_unique_key: str,
-        feature_eventtime_key: str,
+        feature_partition_key: str,
     ):
        """register a feature group metadata object in a exsiting hudi table.
             # Returns
@@ -78,13 +78,13 @@ class FeatureStore:
        #with FeatureStoreHiveEngine(emr_master_node) as engine:
        #      engine.register_feature_group(feature_store_name=self.feature_store_name,feature_group_name, desc,
        #           feature_unique_key,feature_unique_key_type,
-       #           feature_eventtime_key,feature_eventtime_key_type,
+       #           feature_partition_key,feature_partition_key_type,
        #           feature_normal_keys)
        #            )
        with FeatureStoreSparkEngine(emr_master_node) as engine:
              engine.register_feature_group(feature_store_name=self.feature_store_name,feature_group_name, desc,
                   feature_unique_key,feature_unique_key_type,
-                  feature_eventtime_key,feature_eventtime_key_type,
+                  feature_partition_key,feature_partition_key_type,
                   feature_normal_keys)
                    )
 
@@ -95,7 +95,7 @@ class FeatureStore:
         feature_group_name: str,
         desc: str = "",
         feature_unique_key: str,
-        feature_eventtime_key: str,
+        feature_partition_key: str,
         feature_keys:  = {}
     ):
         """Create a feature group metadata object.
@@ -105,17 +105,17 @@ class FeatureStore:
         #with FeatureStoreHiveEngine(emr_master_node) as engine:
         #     engine.create_feature_group(feature_store_name=self.feature_store_name,feature_group_name, desc,
         #           feature_unique_key,feature_unique_key_type,
-        #           feature_eventtime_key,feature_eventtime_key_type,
+        #           feature_partition_key,feature_partition_key_type,
         #           feature_normal_keys)
         #    )
         with FeatureStoreSparkEngine(emr_master_node) as engine:
                     engine.create_feature_group(feature_store_name=self.feature_store_name,feature_group_name, desc,
                           feature_unique_key,feature_unique_key_type,
-                          feature_eventtime_key,feature_eventtime_key_type,
+                          feature_partition_key,feature_partition_key_type,
                           feature_normal_keys)
                    )
         features = pares_features(feature_keys)
-        return FeatureGroup(feature_group_name,desc,feature_unique_key,feature_eventtime_key,features)
+        return FeatureGroup(feature_group_name,desc,feature_unique_key,feature_partition_key,features)
 
 
 
