@@ -1,8 +1,7 @@
 import json
 import sys
-sys.path.append("../engine/spark/")
-sys.path.append("../common/")
-sys.path.append("../func/")
+sys.path.append("../")
+from emr_fs.engine.spark.feature_store_spark_engine import FeatureStoreSparkEngine
 
 
 
@@ -22,8 +21,7 @@ class Query:
         self._sqlSelect = "select "
         self._sqlJoin = ""
         self._sqlWhere = ""
-        self._engine = SparkEngine()
-        if engine.get_type() == "spark":
+        if engine_type == "spark":
            self._engine = FeatureStoreSparkEngine()
         else:
            self._engine=FeatureStoreHiveEngine(emr_master_node)
@@ -31,7 +29,7 @@ class Query:
     def select_all(self):
         """select all the feature group dataset.
         """
-        self._features.append(self.feature_group._features)
+        self._features.append(self._feature_group._features)
         return self
 
     def select(self,features=[]):

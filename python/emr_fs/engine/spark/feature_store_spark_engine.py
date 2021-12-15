@@ -12,7 +12,7 @@ try:
 except ImportError:
     pass
 from emr_fs.exceptions import FeatureStoreException
-from emr_fs.func import query
+from emr_fs.common.logger import Log
 
 
 class FeatureStoreSparkEngine:
@@ -26,6 +26,7 @@ class FeatureStoreSparkEngine:
         self._spark_session.conf.set("hive.exec.dynamic.partition", "true")
         self._spark_session.conf.set("hive.exec.dynamic.partition.mode", "nonstrict")
         self._spark_session.conf.set("spark.sql.hive.convertMetastoreParquet", "false")
+        self.logger = Log("file")
 
     def __enter__(self):
         return self

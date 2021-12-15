@@ -5,9 +5,10 @@ from emr_fs.client import Client
 if __name__ == '__main__':
    client=Client()
    #test create feature store
-   emr_fs01 = client.create_feature_store("emr_feature_store","s3://emrfssampledata/emr_feature_store/","emr feature store test")
+   emr_fs01 = client.create_feature_store("emr_feature_store2","s3://emrfssampledata/emr_feature_store/","emr feature store test")
    #test connect to feature store
-   emr_fs01 = client.connect_to_feature_store("emr_feature_store")
+   #emr_fs01 = client.connect_to_feature_store("emr_feature_store2")
+   print(emr_fs01)
 
    #test create feature group
    features01={"customer_id":"int","city_code":"int","state_code":"int","country_code":"int","dt":"timestamp","identify_code":"int"}
@@ -18,9 +19,9 @@ if __name__ == '__main__':
 
    #test feature group ingestion
    source_feature_group_dataset = "s3://emrfssampledata/feature_store_introduction_custs.csv"
-   emr_fs01.ingestion(source_feature_group_dataset)
+   emr_fg01.ingestion(source_feature_group_dataset)
    source_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_advance.csv"
-   emr_fs02.ingestion(source_feature_group_dataset)
+   emr_fg02.ingestion(source_feature_group_dataset)
 
    #test query feature group
    emr_fg01.select_all().show()

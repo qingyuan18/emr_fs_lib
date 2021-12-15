@@ -1,5 +1,6 @@
 import numpy as np
 from emr_fs.engine.spark.feature_store_spark_engine import FeatureStoreSparkEngine
+from emr_fs.func.query import Query
 
 
 
@@ -25,7 +26,8 @@ class FeatureGroup:
         # Returns
             `Query`. A query object with all features of the feature group.
         """
-
+        if self._query is None:
+          self._query = Query(self._feature_store,self,'spark',None)
         self._query.select_all()
         return self._query
 
@@ -56,7 +58,7 @@ class FeatureGroup:
 
     def ingestion(self,source_dataset_location):
        """use spark engine(which will use hudi engine internal) to ingest  into feature group"""
-       feature_group_location = self._feature_store.s3_store_path()+"/"+self._feature_group_name+"/"
+       feature_group_location = self._feature_store._s3_store_path+"/"+self._feature_group_name+"/"
        with FeatureStoreSparkEngine() as engine:
             engine.save_s3_dataset(
                            self._feature_group_name,
@@ -91,28 +93,6 @@ class FeatureGroup:
 
 
 
-
-    def __getattr__(self, name):
-        try:
-            return self.__getitem__(name)
-        except KeyError:
-            raise AttributeError(
-                f"'FeatureGroup' object has no attribute '{name}'. "
-                "If you are trying to access a feature, fall back on "
-                "using the `get_feature` method."
-            )
-
-    def __getitem__(self, name):
-        if not isinstance(name, str):
-            raise TypeError(
-                f"Expected type `str`, got `{type(name)}`. "
-                "Features are accessible by name."
-            )
-        feature = [f for f in self.__getattribute__("_features") if f.name == name]
-        if len(feature) == 1:
-            return feature[0]
-        else:
-            raise KeyError(f"'FeatureGroup' object has no feature called '{name}'.")
 
 
     @property

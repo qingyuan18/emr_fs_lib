@@ -1,24 +1,8 @@
-#
-#   Copyright 2020 Logical Clocks AB
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
-
 import re
 import json
-
 from datetime import datetime
-from emr_fs import client, feature
+from emr_fs.feature import Feature
+
 
 
 def exec_command(cmd: str, timeout=10) -> str:
@@ -33,8 +17,8 @@ def exec_command(cmd: str, timeout=10) -> str:
 
 def pares_features(feature_keys={}):
     features = []
-    for key, value in feature_keys:
-        feature = Feature(key,value)
+    for key in feature_keys:
+        feature = Feature(key,feature_keys[key])
         features.append(feature)
     return features
 

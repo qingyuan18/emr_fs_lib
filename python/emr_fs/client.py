@@ -28,7 +28,7 @@ class Client(object):
         return self._feature_store
 
     def connect_to_feature_store(self,name):
-        self._feature_store = FeatureStore(emr_master_node,name,None,None)
+        self._feature_store = FeatureStore(name,None,None)
         return self._feature_store
 
     def get_feature_group(self,name):
@@ -43,4 +43,4 @@ class Client(object):
             self.logger.error("not connected to a feature_store")
             return None
          else:
-            return self._feature_store.create_feature_group(name,feature_unique_key,feature_partition_key,features)
+            return self._feature_store.create_feature_group(name,desc,feature_unique_key,feature_partition_key,features)

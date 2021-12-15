@@ -3,6 +3,10 @@ import datetime
 import re
 from emr_fs.func.transformation_function import TransformationFunction
 from emr_fs.engine.spark.feature_store_spark_engine import FeatureStoreSparkEngine
+from emr_fs.common.util import *
+from emr_fs.feature_group import FeatureGroup
+from emr_fs.feature import Feature
+
 
 
 class FeatureStore:
@@ -57,6 +61,7 @@ class FeatureStore:
         #        location=self._s3_store_path)
         with FeatureStoreSparkEngine() as engine:
             engine.create_feature_store(self._name,self._description,self._s3_store_path)
+        print("create feature store successful:"+self._name+"("+self._description + ") in "+self._s3_store_path)
         return FeatureStore(self._name,self._description,self._s3_store_path)
 
 
@@ -104,13 +109,14 @@ class FeatureStore:
         #           feature_partition_key,feature_partition_key_type,
         #           feature_normal_keys)
         #    )
-        with FeatureStoreSparkEngine(emr_master_node) as engine:
+        with FeatureStoreSparkEngine() as engine:
              engine.create_feature_group(self._name,feature_group_name, desc,
                           feature_unique_key,
                           feature_partition_key,
                           feature_normal_keys)
         features = pares_features(feature_keys)
-        return FeatureGroup(feature_group_name,desc,feature_unique_key,feature_partition_key,features)
+        print("created feature group:"+feature_group_name)
+        return FeatureGroup(self,feature_group_name,desc,feature_unique_key,feature_partition_key,features)
 
 
 
