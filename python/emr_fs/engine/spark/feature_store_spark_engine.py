@@ -21,7 +21,7 @@ class FeatureStoreSparkEngine:
     OVERWRITE = "overwrite"
 
     def __init__(self):
-        self._spark_session = SparkSession.builder.appName("emr_feature_store app").master("yarn").deploy("cluster").enableHiveSupport().getOrCreate()
+        self._spark_session = SparkSession.builder.appName("emr_feature_store app").master("yarn").config("spark.submit.deployMode","cluster").enableHiveSupport().getOrCreate()
         self._spark_context = self._spark_session.sparkContext
         self._spark_session.conf.set("hive.exec.dynamic.partition", "true")
         self._spark_session.conf.set("hive.exec.dynamic.partition.mode", "nonstrict")
