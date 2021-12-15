@@ -14,9 +14,11 @@ class Feature:
 
     def __init__(
         self,
+        feature_group_name,
         name,
         type=None
     ):
+        self._feature_group_name=feature_group_name
         self._name = name.lower()
         self._type = type
 

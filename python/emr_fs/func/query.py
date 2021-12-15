@@ -42,11 +42,12 @@ class Query:
     def pareseSql(self):
         full_query="select "
         for feature in self._features:
-           full_query = full_query + feature.get_feature_group+"."+feature.feature_name + ","
+           full_query = full_query + feature._feature_group_name+"."+feature.feature_name + ","
         full_query = full_query + " from " + self._feature_group.get_feature_group_name()
         for  join_feature_group in self._join_feature_groups:
-            full_query = full_query+ " left join "+join_feature_group.get_feature_group_name() +\
-                                     " on "+self._feature_group.get_feature_group_name + "." + self._feature_group.get_feature_unique_key +"="+self._join_feature_group_keys[join_feature_group.get_feature_group_name()]
+            full_query = full_query+ " left join "+join_feature_group._feature_group_name +\
+                                     " on "+self._feature_group._feature_group_name + "." + \
+                                     self._feature_group.get_feature_unique_key +"="+self._join_feature_group_keys[join_feature_group.get_feature_group_name()]
             full_query = full_query + ","
         full_query=" where "+self._sqlWhere
         return full_query

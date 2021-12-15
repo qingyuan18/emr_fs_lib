@@ -15,10 +15,10 @@ def exec_command(cmd: str, timeout=10) -> str:
     return result
 
 
-def pares_features(feature_keys={}):
+def pares_features(feature_group_name,feature_keys={}):
     features = []
     for key in feature_keys:
-        feature = Feature(key,feature_keys[key])
+        feature = Feature(feature_group_name,key,feature_keys[key])
         features.append(feature)
     return features
 

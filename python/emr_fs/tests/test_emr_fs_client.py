@@ -24,10 +24,10 @@ if __name__ == '__main__':
    emr_fg02.ingestion(source_feature_group_dataset)
 
    #test query feature group
-   emr_fg01.select_all().show()
+   emr_fg01.select_all().show(0)
    emr_fs01.select(["customer_id","city_code","state_code"]).show(5)
    #test feature group time travel query
-   emr_fs01.timeQuery("20211201000000","20211216000000").show()
+   emr_fs01.timeQuery("20211201000000","20211216000000").show(0)
    #test join
    emr_fs01.select(["customer_id","city_code","state_code"]).join(emr_fg02.select_all()).show(5)
    #test train dataset retrive

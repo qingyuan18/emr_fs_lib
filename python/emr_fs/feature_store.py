@@ -114,7 +114,7 @@ class FeatureStore:
                           feature_unique_key,
                           feature_partition_key,
                           feature_normal_keys)
-        features = pares_features(feature_keys)
+        features = pares_features(feature_group_name,feature_keys)
         print("created feature group:"+feature_group_name)
         return FeatureGroup(self,feature_group_name,desc,feature_unique_key,feature_partition_key,features)
 
