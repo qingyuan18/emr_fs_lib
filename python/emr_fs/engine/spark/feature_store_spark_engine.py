@@ -21,7 +21,7 @@ class FeatureStoreSparkEngine:
     OVERWRITE = "overwrite"
 
     def __init__(self):
-        self._spark_session = SparkSession.builder.appName("emr_feature_store app").enableHiveSupport().getOrCreate()
+        self._spark_session = SparkSession.builder.appName("emr_feature_store app").config("master","yarn").config("deploy-mode","cluster").enableHiveSupport().getOrCreate()
         self._spark_context = self._spark_session.sparkContext
         self._spark_session.conf.set("hive.exec.dynamic.partition", "true")
         self._spark_session.conf.set("hive.exec.dynamic.partition.mode", "nonstrict")
@@ -38,7 +38,9 @@ class FeatureStoreSparkEngine:
         sql="create database if not exists @emr_feature_store@ comment 'emr_feature_store for sagemaker' location @DBLocation@;".replace("@emr_feature_store@",name).replace("@DBLocation@",location)
         if description  is not None:
            sql.replace("emr_feature_store for sagemaker",desc)
+
         self._spark_session.sql(sql)
+
         self.logger.info("created emr feature store: "+name)
 
     def get_feature_group(feature_store_name,feature_group_name):
