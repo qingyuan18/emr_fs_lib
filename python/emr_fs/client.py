@@ -28,7 +28,7 @@ class Client(object):
         return self._feature_store
 
     def connect_to_feature_store(self,name):
-        self._feature_store = FeatureStore(name,None,None)
+        self._feature_store = FeatureStore(None,None,None).connect_to_feature_store(name)
         return self._feature_store
 
     def get_feature_group(self,name):

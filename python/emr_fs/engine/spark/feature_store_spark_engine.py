@@ -41,7 +41,12 @@ class FeatureStoreSparkEngine:
         return True
 
     def executeSql(self,sqlStr):
-        self._spark_session.sql(sqlStr)
+        df=self._spark_session.sql(sql)
+        retInfo = ""
+        for line in df.collect():
+            retInfo = retInfo+line + "\n"
+        self.logger.info("executeSql result:"+retInfo)
+        return retInfo
 
     def create_feature_store(self,name, desc, location):
         sql="create database if not exists @emr_feature_store@ comment 'emr_feature_store for sagemaker' location '@DBLocation@';".replace("@emr_feature_store@",name).replace("@DBLocation@",location)
