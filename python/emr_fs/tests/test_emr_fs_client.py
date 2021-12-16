@@ -11,7 +11,7 @@ if __name__ == '__main__':
    print(emr_fs01)
 
    #test create feature group
-   features01={"customer_id":"int","city_code":"int","state_code":"int","country_code":"int","dt":"timestamp","identify_code":"int"}
+   features01={"customer_id":"int","city_code":"int","state_code":"int","country_code":"int","dt":"string","identify_code":"int"}
    emr_fg01 = client.create_feature_group("customer_base","","customer_id","dt",features01)
 
    features02 = {"customer_id":"int",	"age":"int","diabetes":"int","ejection_fraction":"int",	"high_blood_pressure":"int","platelets":"int","sex":"int","smoking":"init","DEATH_EVENT":"int","dt":"timestamp"}

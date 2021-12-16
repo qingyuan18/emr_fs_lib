@@ -22,7 +22,9 @@ class FeatureStoreSparkEngine:
     OVERWRITE = "overwrite"
 
     def __init__(self):
-        self._spark_session = SparkSession.builder.appName("emr_feature_store app").master("yarn").config("spark.submit.deployMode","client").enableHiveSupport().getOrCreate()
+        self._spark_session = SparkSession.builder.appName("emr_feature_store app").master("yarn").config("spark.submit.deployMode","client")\
+                                                   .config("spark.serializer","org.apache.spark.serializer.KryoSerializer")\
+                                                   .enableHiveSupport().getOrCreate()
         self._spark_context = self._spark_session.sparkContext
         self._spark_session.conf.set("hive.exec.dynamic.partition", "true")
         self._spark_session.conf.set("hive.exec.dynamic.partition.mode", "nonstrict")
@@ -161,11 +163,8 @@ class FeatureStoreSparkEngine:
             feature_partition_key
         ):
             hudi_engine = HudiEngine(feature_store_name,feature_group_name,self._spark_context,self._spark_session)
-            print("here2====")
             hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
-            print("here3===="+hudi_options)
-            dataframe = _spark_session.read.format("csv").option("header", "true").load(source_s3_location)
-            print("here4===="+hudi_options)
+            dataframe = self._spark_session.read.format("csv").option("header", "true").load(source_s3_location)
             try:
                 dataframe.write.format("org.apache.hudi").options(**hudi_options).mode("append").save(feature_group_location)
             except  Exception as e:
