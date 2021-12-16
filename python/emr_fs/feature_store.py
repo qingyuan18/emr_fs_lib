@@ -61,7 +61,6 @@ class FeatureStore:
         #        location=self._s3_store_path)
         with FeatureStoreSparkEngine() as engine:
             engine.create_feature_store(self._name,self._description,self._s3_store_path)
-        print("create feature store successful:"+self._name+"("+self._description + ") in "+self._s3_store_path)
         return FeatureStore(self._name,self._description,self._s3_store_path)
 
 
@@ -113,7 +112,8 @@ class FeatureStore:
              engine.create_feature_group(self._name,feature_group_name, desc,
                           feature_unique_key,
                           feature_partition_key,
-                          feature_normal_keys)
+                          feature_keys,
+                          self._s3_store_path+"/"+feature_group_name)
         features = pares_features(feature_group_name,feature_keys)
         print("created feature group:"+feature_group_name)
         return FeatureGroup(self,feature_group_name,desc,feature_unique_key,feature_partition_key,features)

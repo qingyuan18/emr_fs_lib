@@ -81,7 +81,7 @@ class FeatureStoreSparkEngine:
                                  feature_store_name,feature_group_name, desc,
                                  feature_unique_key,
                                  feature_partition_key,
-                                 features):
+                                 features,location):
 
         self._spark_session.sql("use "+feature_store_name+";")
         sql="""CREATE EXTERNAL TABLE @feature_group_nm@(
@@ -90,26 +90,30 @@ class FeatureStoreSparkEngine:
           _hoodie_record_key string,
           _hoodie_partition_path string,
           _hoodie_file_name string,
-          "@features@)
+          @features@)
         PARTITIONED BY (
           @feature_partitions@)
         ROW FORMAT SERDE
           'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
         STORED AS INPUTFORMAT
           'org.apache.hudi.hadoop.HoodieParquetInputFormat'
+        location '@location@'
         OUTPUTFORMAT
           'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat'
         TBLPROPERTIES (@tableProps@)"""
 
         tableProps="'feature_unique_key'='"+feature_unique_key+"',"
-        tableProps=tableProps+"'feature_partition_key='"+feature_partition_key+"'"
-        partition_keys=feature_partition_key+" "+feature_partition_key_type
+        tableProps=tableProps+"'feature_partition_key'='"+feature_partition_key+"'"
         columns=""
-        for feature in features:
-           columns.append(feature[0]+" "+feature[1]+",\n")
+        for featureKey in features:
+           columns=columns+featureKey+" "+features[featureKey]+",\n"
+        columns=columns[:-2]
         sql=sql.replace("@features@",columns)
         sql=sql.replace("@tableProps@",tableProps)
-        print("sql=="+sql)
+        sql=sql.replace("@feature_partitions@",feature_partition_key)
+        sql=sql.replace("@feature_group_nm@",feature_group_name)
+        sql=sql.replace("@location@",location)
+        print("here3=="+sql)
         try:
            df=self._spark_session.sql(sql)
            self.logger.info("create emr feature group "+feature_group_name + "in "+ feature_store_name+" result:")
@@ -154,7 +158,7 @@ class FeatureStoreSparkEngine:
             feature_unique_key,
             feature_partition_key
         ):
-            hudi_engine = HudiEngine(feature_group,self._spark_context,self._spark_session)
+            hudi_engine = HudiEngine(feature_group_name,self._spark_context,self._spark_session)
             hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
             dataframe = _spark_session.read.format("org.apache.hudi").load(source_s3_location)
             try:

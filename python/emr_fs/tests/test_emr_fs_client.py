@@ -5,9 +5,9 @@ from emr_fs.client import Client
 if __name__ == '__main__':
    client=Client()
    #test create feature store
-   emr_fs01 = client.create_feature_store("emr_feature_store2","s3://emrfssampledata/emr_feature_store/","emr feature store test")
+   emr_fs01 = client.create_feature_store("emr_feature_store","s3://emrfssampledata/emr_feature_store/","emr feature store test")
    #test connect to feature store
-   #emr_fs01 = client.connect_to_feature_store("emr_feature_store2")
+   #emr_fs01 = client.connect_to_feature_store("emr_feature_store")
    print(emr_fs01)
 
    #test create feature group
