@@ -37,10 +37,14 @@ class FeatureStoreSparkEngine:
         self._spark_session.stop()
         return True
 
+    def executeSql(self,sqlStr):
+        self._spark_session.sql(sqlStr)
+
     def create_feature_store(self,name, desc, location):
-        sql="create database if not exists @emr_feature_store@ comment 'emr_feature_store for sagemaker' location @DBLocation@;".replace("@emr_feature_store@",name).replace("@DBLocation@",location)
-        if description  is not None:
+        sql="create database if not exists @emr_feature_store@ comment 'emr_feature_store for sagemaker' location '@DBLocation@';".replace("@emr_feature_store@",name).replace("@DBLocation@",location)
+        if desc is not None:
            sql.replace("emr_feature_store for sagemaker",desc)
+        print("sql=="+sql)
 
         self._spark_session.sql(sql)
 
@@ -59,14 +63,18 @@ class FeatureStoreSparkEngine:
                                  feature_store_name,feature_group_name, desc,
                                  feature_unique_key,
                                  feature_partition_key):
-        self._spark_session.sql("use "+feature_store_name+";")
-        sql = "alter table  @feature_group_nm@ set tblproperties ('feature_unique_key'='@feature_unique_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_unique_key@",feature_unique_key)
-        self._spark_session.sql(sql)
-        sql = "alter table  @feature_group_nm@ set tblproperties ('feature_partition_key'='@feature_partition_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_partition_key@",feature_partition_key)
-        df=self._spark_session.sql(sql)
-        self.logger.info("register emr feature group "+feature_group_name + "in "+ feature_store_name+" result:")
-        for line in df.collect():
-            self.logger.info(line)
+        try:
+          self._spark_session.sql("use "+feature_store_name+";")
+          sql = "alter table  @feature_group_nm@ set tblproperties ('feature_unique_key'='@feature_unique_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_unique_key@",feature_unique_key)
+          self._spark_session.sql(sql)
+          sql = "alter table  @feature_group_nm@ set tblproperties ('feature_partition_key'='@feature_partition_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_partition_key@",feature_partition_key)
+          df=self._spark_session.sql(sql)
+          self.logger.info("register emr feature group "+feature_group_name + "in "+ feature_store_name+" result:")
+          for line in df.collect():
+              self.logger.info(line)
+        except  Exception as e:
+          print(str(e))
+          self.logger.error(str(e))
 
 
     def create_feature_group(self,
@@ -99,19 +107,29 @@ class FeatureStoreSparkEngine:
         columns=""
         for feature in features:
            columns.append(feature[0]+" "+feature[1]+",\n")
-        sql=sql.replace("@feature_normal_keys@",columns)
+        sql=sql.replace("@features@",columns)
         sql=sql.replace("@tableProps@",tableProps)
-        df=self._spark_session.sql(sql)
-        self.logger.info("create emr feature group "+feature_group_name + "in "+ feature_store_name+" result:")
-        for result in df.collect():
-           self.logger.info(result)
+        print("sql=="+sql)
+        try:
+           df=self._spark_session.sql(sql)
+           self.logger.info("create emr feature group "+feature_group_name + "in "+ feature_store_name+" result:")
+           for result in df.collect():
+               self.logger.info(result)
+        except  Exception as e:
+           print(str(e))
+           self.logger.error(str(e))
+
 
 
     def show(full_query,lines):
-        if lines != 0:
-           self._spark_session.sql(full_query).show(lines)
-        else :
-           self._spark_session.sql(full_query).show()
+        try:
+          if lines != 0:
+             self._spark_session.sql(full_query).show(lines)
+          else :
+             self._spark_session.sql(full_query).show()
+        except  Exception as e:
+             print(str(e))
+             self.logger.error(str(e))
 
     def query(full_query):
         return self._spark_session.sql(full_query)
