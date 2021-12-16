@@ -13,6 +13,7 @@ except ImportError:
     pass
 from emr_fs.exceptions import FeatureStoreException
 from emr_fs.common.logger import Log
+from emr_fs.engine.spark.hudi_engine import HudiEngine
 
 
 class FeatureStoreSparkEngine:
@@ -151,6 +152,7 @@ class FeatureStoreSparkEngine:
 
     def save_s3_dataset(
             self,
+            feature_store_name,
             feature_group_name,
             feature_group_location,
             source_s3_location,
@@ -158,11 +160,14 @@ class FeatureStoreSparkEngine:
             feature_unique_key,
             feature_partition_key
         ):
-            hudi_engine = HudiEngine(feature_group_name,self._spark_context,self._spark_session)
+            hudi_engine = HudiEngine(feature_store_name,feature_group_name,self._spark_context,self._spark_session)
+            print("here2====")
             hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
-            dataframe = _spark_session.read.format("org.apache.hudi").load(source_s3_location)
+            print("here3===="+hudi_options)
+            dataframe = _spark_session.read.format("csv").option("header", "true").load(source_s3_location)
+            print("here4===="+hudi_options)
             try:
-                dataframe.write.format("hudi").options(**hudi_options).mode("append").save(feature_group_location)
+                dataframe.write.format("org.apache.hudi").options(**hudi_options).mode("append").save(feature_group_location)
             except  Exception as e:
                 raise FeatureStoreException(
                     "Error writing to offline feature group :" + str(e)
