@@ -97,9 +97,9 @@ class FeatureStoreSparkEngine:
           'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
         STORED AS INPUTFORMAT
           'org.apache.hudi.hadoop.HoodieParquetInputFormat'
-        location '@location@'
         OUTPUTFORMAT
           'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat'
+        LOCATION '@location@'
         TBLPROPERTIES (@tableProps@)"""
 
         tableProps="'feature_unique_key'='"+feature_unique_key+"',"
