@@ -8,17 +8,17 @@ if __name__ == '__main__':
    emr_fs01 = client.create_feature_store("emr_feature_store","s3://emrfssampledata/emr_feature_store/","emr feature store test")
    #test connect to feature store
    #emr_fs01 = client.connect_to_feature_store("emr_feature_store")
-   print(emr_fs01)
+   prstring(emr_fs01)
 
    #test create feature group
-   features01={"customer_id":"int","city_code":"int","state_code":"int","country_code":"int","dt":"string","identify_code":"int"}
+   features01={"customer_id":"string","city_code":"string","state_code":"string","country_code":"string","dt":"string","identify_code":"string"}
    emr_fg01 = client.create_feature_group("customer_base","","customer_id","dt",features01)
 
-   features02 = {"customer_id":"int",	"age":"int","diabetes":"int","ejection_fraction":"int",	"high_blood_pressure":"int","platelets":"int","sex":"int","smoking":"init","DEATH_EVENT":"int","dt":"timestamp"}
+   features02 = {"customer_id":"string",	"age":"string","diabetes":"string","ejection_fraction":"string",	"high_blood_pressure":"string","platelets":"string","sex":"string","smoking":"init","DEATH_EVENT":"string","dt":"timestamp"}
    emr_fg02 = client.create_feature_group("customer_advance","","customer_id","dt",features02)
 
    #test feature group ingestion
-   source_feature_group_dataset = "s3://emrfssampledata/feature_store_introduction_custs.csv"
+   source_feature_group_dataset = "s3://emrfssampledata/feature_store_stringroduction_custs.csv"
    emr_fg01.ingestion(source_feature_group_dataset)
    source_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_advance.csv"
    emr_fg02.ingestion(source_feature_group_dataset)
