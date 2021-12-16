@@ -9,14 +9,8 @@ class TransformationFunction:
         query,
         s3_target_path
    ):
-        self._id = id
         self._query = query
         self._s3_target_path = s3_target_path
-        self._sc = SparkContext()
-
-
-
-   def __init__(self):
         self.logger = Log("file")
 
 
@@ -39,19 +33,3 @@ class TransformationFunction:
 
 
 
-   @property
-   def query(self):
-        return self._query
-
-   @property
-   def s3_target_path(self):
-        return self._s3_target_path
-
-
-   @s3_target_path.setter
-   def s3_target_path(self, s3_target_path):
-        self._s3_target_path = s3_target_path
-
-   @query.setter
-   def query(self, query):
-        self._query = query

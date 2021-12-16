@@ -8,7 +8,7 @@ if __name__ == '__main__':
    emr_fs01 = client.create_feature_store("emr_feature_store","s3://emrfssampledata/emr_feature_store/","emr feature store test")
    #test connect to feature store
    #emr_fs01 = client.connect_to_feature_store("emr_feature_store")
-   prstring(emr_fs01)
+   #prstring(emr_fs01)
 
    #test create feature group
    features01={"customer_id":"string","city_code":"string","state_code":"string","country_code":"string","dt":"string","identify_code":"string"}
