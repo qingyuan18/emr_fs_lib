@@ -24,8 +24,8 @@ class FeatureStore:
     def connect_to_feature_store(self,feature_store_name):
         with FeatureStoreSparkEngine() as engine:
              feature_store_info = engine.executeSql("desc database "+feature_store_name)
-             self._name = feature_store_info.split(" ")[0]
-             otherInfo = feature_store_info.split(" ")[1:]
+             self._name = feature_store_info.split(",")[0]
+             otherInfo = feature_store_info.split(",")[1:]
              for info in otherInfo:
                  if "//" in info:
                     self._s3_store_path = info
@@ -37,6 +37,7 @@ class FeatureStore:
         feature_group = None
         with FeatureStoreSparkEngine() as engine:
             feature_group_info =  engine.get_feature_group(self._name,feature_group_name)
+            print("here1==="+feature_group_info)
             feature_unique_key = ""
             feature_partition_key = ""
             features = []

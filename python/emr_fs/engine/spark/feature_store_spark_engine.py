@@ -41,10 +41,10 @@ class FeatureStoreSparkEngine:
         return True
 
     def executeSql(self,sqlStr):
-        df=self._spark_session.sql(sql)
+        df=self._spark_session.sql(sqlStr)
         retInfo = ""
         for line in df.collect():
-            retInfo = retInfo+line + "\n"
+            retInfo = retInfo+line["info_value"] + ","
         self.logger.info("executeSql result:"+retInfo)
         return retInfo
 
@@ -58,12 +58,12 @@ class FeatureStoreSparkEngine:
 
         self.logger.info("created emr feature store: "+name)
 
-    def get_feature_group(feature_store_name,feature_group_name):
-        sql = "show create table "+feature_store_name+ "."+feature_group_name+";"
+    def get_feature_group(self,feature_store_name,feature_group_name):
+        sql = "show create table "+feature_store_name+ "."+feature_group_name+" AS SERDE"
         df=self._spark_session.sql(sql)
         feature_group_info = ""
         for line in df.collect():
-            feature_group_info = feature_group_info+line + "\n"
+            feature_group_info = feature_group_info+line["createtab_stmt"] + "\n"
         self.logger.info("get feature groups:"+feature_group_info)
         return feature_group_info
 
