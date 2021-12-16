@@ -29,13 +29,15 @@ class Query:
     def select_all(self):
         """select all the feature group dataset.
         """
-        self._features.append(self._feature_group._features)
+        for feature in self._feature_group._features:
+             self._features.append(feature)
         return self
 
     def select(self,features=[]):
         """select subset of the feature group dataset.
         """
-        self._features.append(features)
+        for feature in features:
+            self._features.append(feature)
         return self
 
 
