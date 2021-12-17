@@ -42,22 +42,33 @@ class FeatureStore:
         feature_partition_key = ""
         features =[]
         feature_group_info=feature_group_info.replace("\\n","").replace("\n","")
-        matchObj = re.findall(r'[(](.*?)[)]', feature_group_info)
-        tableColumns = matchObj[0]
-        tablePros = matchObj[3]
-        for property in tablePros:
-            if 'feature_unique_key' in property:
-               feature_unique_key=property.split("=")[1]
-            elif 'feature_partition_key' in property:
-               feature_partition_key=property.split("=")[1]
-        for column in tableColumns.split(","):
-            if "hoodie" in column:
-                continue
-            feature_name = column.split(" ")[0].replace("`","").replace("'","")
-            print("here1=="+feature_name)
-            feature_type = column.split(" ")[1]
-            feature = Feature(feature_group_name,feature_name,feature_type)
-            features.append(feature)
+        matchObjs = re.findall(r'[(](.*?)[)]', feature_group_info)
+        for matchObj in matchObjs:
+            print("here1=="+matchObj)
+            if "," in matchObj and " " in matchObj:
+               #tableColumns
+               tableColumns = matchObj.split(",")
+               for column in tableColumns.split(","):
+                   if "hoodie" in column:
+                       continue
+                   print("here0=="+column)
+                   feature_name = column.split(" ")[0].replace("`","").replace("'","")
+                   print("here1=="+column.split(" "))
+                   feature_type = column.split(" ")[1]
+                   feature = Feature(feature_group_name,feature_name,feature_type)
+                   features.append(feature)
+            elif "," in matchObj and "=" in matchObj:
+               tablePros=matchObj.split(",")
+               for property in tablePros:
+                    if 'feature_unique_key' in property:
+                       feature_unique_key=property.split("=")[1]
+                    elif 'feature_partition_key' in property:
+                       feature_partition_key=property.split("=")[1]
+            elif " " in matchObj:
+               feature_name = column.split(" ")[0].replace("`","").replace("'","")
+               feature_type = column.split(" ")[1]
+               feature = Feature(feature_group_name,feature_name,feature_type)
+               features.append(feature)
         feature_group = FeatureGroup(self,feature_group_name,"",feature_unique_key,feature_partition_key,features)
         return feature_group
 
