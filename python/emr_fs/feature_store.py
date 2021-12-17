@@ -48,7 +48,7 @@ class FeatureStore:
             if "," in matchObj and " " in matchObj:
                #tableColumns
                tableColumns = matchObj.split(",")
-               for column in tableColumns.split(","):
+               for column in tableColumns:
                    if "hoodie" in column:
                        continue
                    print("here0=="+column)
