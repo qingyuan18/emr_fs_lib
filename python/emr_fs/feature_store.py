@@ -49,9 +49,12 @@ class FeatureStore:
             if 'feature_unique_key' in property:
                feature_unique_key=property.split("=")[1]
             elif 'feature_partition_key' in property:
-               feature_partition_key=property.split("=")
+               feature_partition_key=property.split("=")[1]
         for column in tableColumns.split(","):
+            if "hoodie" in column:
+                continue
             feature_name = column.split(" ")[0].replace("`","").replace("'","")
+            print("here1=="+feature_name)
             feature_type = column.split(" ")[1]
             feature = Feature(feature_group_name,feature_name,feature_type)
             features.append(feature)
