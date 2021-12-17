@@ -35,30 +35,27 @@ class FeatureStore:
 
     def get_feature_group(self, feature_group_name):
         feature_group = None
+        feature_group_info=""
         with FeatureStoreSparkEngine() as engine:
             feature_group_info =  engine.get_feature_group(self._name,feature_group_name)
-            print("here1==="+feature_group_info)
-            feature_unique_key = ""
-            feature_partition_key = ""
-            features = []
-
-            matchObj = re.findall(r'[(](.*?)[)]', feature_group_info)[0]
-            tableColumns = matchObj[0]
-            tablePros = matchObj[1]
-
-            for property in tablePros:
-                if 'feature_unique_key' in property:
-                   feature_unique_key=property.split("=")[1]
-                elif 'feature_partition_key' in property:
-                   feature_partition_key=property.split("=")[1]
-
-            for column in tableColumns:
-                name = column.split(" ")[0]
-                type = column.split(" ")[1]
-                feature = Feature(name,type)
-                features.append(feature)
-
-            feature_group = FeatureGroup(self,name,"",feature_unique_key,feature_partition_key,features)
+        feature_unique_key = ""
+        feature_partition_key = ""
+        features =[]
+        feature_group_info=feature_group_info.replace("\\n","").replace("\n","")
+        matchObj = re.findall(r'[(](.*?)[)]', feature_group_info)
+        tableColumns = matchObj[0]
+        tablePros = matchObj[3]
+        for property in tablePros:
+            if 'feature_unique_key' in property:
+               feature_unique_key=property.split("=")[1]
+            elif 'feature_partition_key' in property:
+               feature_partition_key=property.split("=")
+        for column in tableColumns.split(","):
+            feature_name = column.split(" ")[0].replace("`","").replace("'","")
+            feature_type = column.split(" ")[1]
+            feature = Feature(feature_group_name,feature_name,feature_type)
+            features.append(feature)
+        feature_group = FeatureGroup(self,feature_group_name,"",feature_unique_key,feature_partition_key,features)
         return feature_group
 
 

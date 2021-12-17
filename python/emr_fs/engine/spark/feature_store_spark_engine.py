@@ -133,7 +133,8 @@ class FeatureStoreSparkEngine:
 
 
 
-    def show(full_query,lines):
+    def show(self,full_query,lines):
+        print("here1==="+full_query)
         try:
           if lines != 0:
              self._spark_session.sql(full_query).show(lines)
