@@ -52,7 +52,7 @@ class FeatureStore:
         else:
             tablePros=matchObjs[2]
         if partitions!="":
-             for partition in partitions.split(",")
+             for partition in partitions.split(","):
                 feature_name = partition.strip().split(" ")[0].replace("`","").replace("'","")
                 feature_type = partition.strip().split(" ")[1]
                 feature = Feature(feature_group_name,feature_name,feature_type)
@@ -66,11 +66,11 @@ class FeatureStore:
                 feature = Feature(feature_group_name,feature_name,feature_type)
                 features.append(feature)
         if tablePros != "":
-            for property in tablePros.split(",")
+            for property in tablePros.split(","):
                 if 'feature_unique_key' in property:
                     feature_unique_key=property.split("=")[0]
                 elif 'feature_partition_key' in property:
-                    feature_partition_key=property.split("=")[1]
+                    feature_partition_key=property.split("=")[0]
         feature_group = FeatureGroup(self,feature_group_name,"",feature_unique_key,feature_partition_key,features)
         return feature_group
 
