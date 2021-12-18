@@ -45,30 +45,36 @@ class FeatureStore:
         matchObjs = re.findall(r'[(](.*?)[)]', feature_group_info)
         for matchObj in matchObjs:
             print("here1=="+matchObj)
-            if "," in matchObj and " " in matchObj:
+            if "," in matchObj and " " in matchObj and "=" not in matchObj:
                #tableColumns
                tableColumns = matchObj.split(",")
                for column in tableColumns:
                    if "hoodie" in column:
                        continue
-                   print("here0=="+column)
-                   feature_name = column.split(" ")[0].replace("`","").replace("'","")
-                   print("here1=="+column.split(" "))
-                   feature_type = column.split(" ")[1]
+                   feature_name = column.replace(" ","|").split("|")[0].replace("`","").replace("'","")
+                   print("here1=="+feature_name)
+                   feature_type = column.replace(" ","|").split("|")[1]
+                   print("here2=="+feature_type)
                    feature = Feature(feature_group_name,feature_name,feature_type)
                    features.append(feature)
-            elif "," in matchObj and "=" in matchObj:
+            elif " " in matchObj and "=" in matchObj and "," in matchObj:
+               feature_name = column.split(" ")[0].replace("`","").replace("'","")
+               feature_type = column.split(" ")[1]
+               feature = Feature(feature_group_name,feature_name,feature_type)
+               features.append(feature)
+            elif " " in matchObj and "=" not in matchObj and "," not in matchObj:
+               feature_name = column.replace(" ","|").split("|")[0].replace("`","").replace("'","")
+               feature_type = column.replace(" ","|").split("1")[1]
+               feature = Feature(feature_group_name,feature_name,feature_type)
+               features.append(feature)
+            elif "=" in matchObj and "," not in matchObj:
+               pass
                tablePros=matchObj.split(",")
                for property in tablePros:
                     if 'feature_unique_key' in property:
                        feature_unique_key=property.split("=")[1]
                     elif 'feature_partition_key' in property:
                        feature_partition_key=property.split("=")[1]
-            elif " " in matchObj:
-               feature_name = column.split(" ")[0].replace("`","").replace("'","")
-               feature_type = column.split(" ")[1]
-               feature = Feature(feature_group_name,feature_name,feature_type)
-               features.append(feature)
         feature_group = FeatureGroup(self,feature_group_name,"",feature_unique_key,feature_partition_key,features)
         return feature_group
 
