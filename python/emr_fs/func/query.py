@@ -59,6 +59,7 @@ class Query:
         print("full_query sql is:"+full_query)
         return full_query
 
+
     def show(self,lines:int):
         """Show the first N rows of the Query.
         """
