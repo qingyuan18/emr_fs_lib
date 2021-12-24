@@ -142,7 +142,7 @@ class FeatureStoreSparkEngine:
              print(str(e))
              self.logger.error(str(e))
 
-    def query(full_query):
+    def query(self,full_query):
         return self._spark_session.sql(full_query)
 
 
