@@ -68,9 +68,9 @@ class FeatureStore:
         if tablePros != "":
             for property in tablePros.split(","):
                 if 'feature_unique_key' in property:
-                    feature_unique_key=property.split("=")[1]
+                    feature_unique_key=property.split("=")[1].replace("`","").replace("'","")
                 elif 'feature_partition_key' in property:
-                    feature_partition_key=property.split("=")[1]
+                    feature_partition_key=property.split("=")[1].replace("`","").replace("'","")
         feature_group = FeatureGroup(self,feature_group_name,"",feature_unique_key,feature_partition_key,features)
         return feature_group
 
