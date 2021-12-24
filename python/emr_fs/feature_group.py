@@ -33,7 +33,7 @@ class FeatureGroup:
 
     def timeQuery(self,beginTimeStamp,endTimeStamp):
         if self._query is None:
-           self._query = Query(self._feature_store.get_feature_store_name(),self,'spark',None)
+           self._query = Query(self._feature_store,self,'spark',None)
            self._query.timeQuery(beginTimeStamp,endTimeStamp)
         return self._query
 
@@ -41,12 +41,17 @@ class FeatureGroup:
        """Select a subset of features of the feature group and return a query object.
        """
        if self._query is None:
-          self._query = Query(self.feature_store,self,'spark',None)
-       return self.query.select(features)
+          self._query = Query(self._feature_store,self,'spark',None)
+       filtedFeatures=[]
+       for feature_name in features:
+          for feature in self._features:
+             if feature._name == feature_name:
+                filtedFeatures.append(feature)
+       return self._query.select(filtedFeatures)
 
     def ingestion(self,dataframe):
        """use spark engine(which will use hudi engine internal) to ingest  into feature group"""
-       feature_group_location = self._feature_store.s3_store_path()
+       feature_group_location = self._feature_store._s3_store_path+self._feature_group_name+"/"
        with FeatureStoreSparkEngine() as engine:
             engine.save_dataframe(
                            self._feature_group_name,
@@ -76,7 +81,7 @@ class FeatureGroup:
             startDt,
             endDt,
             outputLoc ):
-        query = Query(self.feature_store.get_feature_store_name(),self,'spark',None)
+        query = Query(self._feature_store,self,'spark',None)
         query.create_training_dataset(name,data_format,startDt,endDt,outputLoc)
 
 

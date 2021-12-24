@@ -72,7 +72,7 @@ class Query:
             startDt,
             endDt,
             outputLoc):
-        timeQuery(startDt,engine)
+        timeQuery(startDt,endDt)
         full_query = self.pareseSql()
         df = self._engine.query(full_query)
         transfer = TransformationFunction(self,data_format,outputLoc)
