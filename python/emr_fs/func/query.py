@@ -55,7 +55,7 @@ class Query:
                 full_query = full_query + ","
             full_query=full_query[:-1]
         if self._sqlWhere != "":
-            full_query=" where "+self._sqlWhere
+            full_query=full_query+" where "+self._sqlWhere
         return full_query
 
     def show(self,lines:int):
