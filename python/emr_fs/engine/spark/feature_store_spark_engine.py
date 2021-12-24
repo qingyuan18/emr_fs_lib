@@ -169,8 +169,9 @@ class FeatureStoreSparkEngine:
             hudi_engine = HudiEngine(feature_store_name,feature_group_name,self._spark_context,self._spark_session)
             hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
             dataframe = self._spark_session.read.format("csv").option("header", "true").load(source_s3_location)
+            print(hudi_options)
             try:
-                dataframe.write.format("org.apache.hudi").options(**hudi_options).mode("append").save(feature_group_location)
+                dataframe.write.format("org.apache.hudi").options(**hudi_options).mode("overwrite").save(feature_group_location)
             except  Exception as e:
                 raise FeatureStoreException(
                     "Error writing to offline feature group :" + str(e)

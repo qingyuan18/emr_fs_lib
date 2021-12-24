@@ -51,7 +51,7 @@ class FeatureGroup:
 
     def ingestion(self,dataframe):
        """use spark engine(which will use hudi engine internal) to ingest  into feature group"""
-       feature_group_location = self._feature_store._s3_store_path+self._feature_group_name+"/"
+       feature_group_location = self._feature_store._s3_store_path+"/"+self._feature_group_name+"/"
        with FeatureStoreSparkEngine() as engine:
             engine.save_dataframe(
                            self._feature_group_name,
@@ -63,9 +63,11 @@ class FeatureGroup:
 
     def ingestion(self,source_dataset_location):
        """use spark engine(which will use hudi engine internal) to ingest  into feature group"""
-       feature_group_location = self._feature_store._s3_store_path+self._feature_group_name+"/"
-       engine=FeatureStoreSparkEngine()
-       engine.save_s3_dataset(
+       feature_group_location = self._feature_store._s3_store_path+"/"+self._feature_group_name+"/"
+       print("feature_partition_key:"+self._feature_partition_key)
+       print("feature_unique_key:"+self._feature_unique_key)
+       with FeatureStoreSparkEngine() as engine:
+            engine.save_s3_dataset(
                            self._feature_store._name,
                            self._feature_group_name,
                            feature_group_location,

@@ -15,15 +15,15 @@ if __name__ == '__main__':
    #emr_fg01 = client.create_feature_group("customer_base","","customer_id","dt",features01)
    emr_fg01 = emr_fs01.get_feature_group("customer_base")
 
-   #features02 = {"customer_id":"string",	"age":"string","diabetes":"string","ejection_fraction":"string",	"high_blood_pressure":"string","platelets":"string","sex":"string","smoking":"string","DEATH_EVENT":"string","dt":"string"}
-   #emr_fg02 = client.create_feature_group("customer_advance","","customer_id","dt",features02)
-   emf_fg02= emr_fs01.get_feature_group("customer_advance")
+   features02 = {"customer_id":"string",	"age":"string","diabetes":"string","ejection_fraction":"string",	"high_blood_pressure":"string","platelets":"string","sex":"string","smoking":"string","DEATH_EVENT":"string","dt":"string"}
+   emr_fg02 = client.create_feature_group("customer_advance","","customer_id","dt",features02)
+   emr_fg02= emr_fs01.get_feature_group("customer_advance")
 
    #test feature group ingestion
-   #source_feature_group_dataset = "s3://emrfssampledata/feature_store_stringroduction_custs.csv"
+   #source_feature_group_dataset = "s3://emrfssampledata/feature_store_introduction_custs.csv"
    #emr_fg01.ingestion(source_feature_group_dataset)
-   #source_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_advance.csv"
-   #emr_fg02.ingestion(source_feature_group_dataset)
+   source_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_advance.csv"
+   emr_fg02.ingestion(source_feature_group_dataset)
 
    #test query feature group
    #emr_fg01.select_all().show(0)

@@ -10,7 +10,6 @@ class HudiEngine:
         spark_context,
         spark_session,
     ):
-        print("here0===")
         self._feature_store_name=feature_store_name
         self._feature_group_name = feature_group_name
         self._spark_context = spark_context
