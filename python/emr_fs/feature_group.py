@@ -77,13 +77,15 @@ class FeatureGroup:
                            self._feature_partition_key)
 
     def print_info(self):
+        print("***********************************************")
         print("feature store name:"+self._feature_store._name)
         print("feature group name:"+self._feature_group_name)
         print("feature_unique_key:"+self._feature_unique_key)
         print("feature_partition_key:"+self._feature_partition_key)
         print("all features:")
         for feature in self._features:
-            print(feature._name +":"+feature._type)
+            print("   "+feature._name +":"+feature._type)
+        print("***********************************************")
 
     def create_training_dataset(self,
             name ,
