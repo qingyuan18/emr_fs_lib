@@ -72,7 +72,7 @@ class Query:
             startDt,
             endDt,
             outputLoc):
-        timeQuery(startDt,endDt)
+        self.timeQuery(startDt,endDt)
         full_query = self.pareseSql()
         df = self._engine.query(full_query)
         transfer = TransformationFunction(self,data_format,outputLoc)
@@ -93,7 +93,7 @@ class Query:
         return self
 
     def timeQuery(self,begin_timestamp,end_timestamp):
-        self._sqlWhere = " "+self._feature_group+"._hoodie_commit_time>='"+begin_timestamp + "' and _hoodie_commit_time <='"+end_timestamp+"'"
+        self._sqlWhere = " "+self._feature_group._feature_group_name+"._hoodie_commit_time>='"+begin_timestamp + "' and "+self._feature_group._feature_group_name+"._hoodie_commit_time <='"+end_timestamp+"'"
         return self
 
 

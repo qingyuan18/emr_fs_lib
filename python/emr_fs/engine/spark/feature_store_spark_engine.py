@@ -121,7 +121,6 @@ class FeatureStoreSparkEngine:
         sql=sql.replace("@feature_partitions@",feature_partition_key)
         sql=sql.replace("@feature_group_nm@",feature_group_name)
         sql=sql.replace("@location@",location)
-        print("here3=="+sql)
         try:
            df=self._spark_session.sql(sql)
            self.logger.info("create emr feature group "+feature_group_name + "in "+ feature_store_name+" result:")
@@ -134,7 +133,6 @@ class FeatureStoreSparkEngine:
 
 
     def show(self,full_query,lines):
-        print("here1==="+full_query)
         try:
           if lines != 0:
              self._spark_session.sql(full_query).show(lines)
