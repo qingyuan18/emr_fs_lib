@@ -77,7 +77,7 @@ class FeatureGroup:
                            self._feature_partition_key)
 
     def print_info(self):
-        print("***********************************************")
+        print("*************feature group details*************************")
         print("feature store name:"+self._feature_store._name)
         print("feature group name:"+self._feature_group_name)
         print("feature_unique_key:"+self._feature_unique_key)
@@ -93,8 +93,9 @@ class FeatureGroup:
             startDt,
             endDt,
             outputLoc ):
-        query = Query(self._feature_store,self,'spark',None)
-        query.create_training_dataset(name,data_format,startDt,endDt,outputLoc)
+        if self._query is None:
+            self._query = Query(self._feature_store,self,'spark',None)
+        self._query.create_training_dataset(name,data_format,startDt,endDt,outputLoc)
 
 
     def get_feature(self, name: str):
