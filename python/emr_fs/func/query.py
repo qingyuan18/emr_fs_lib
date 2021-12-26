@@ -87,8 +87,8 @@ class Query:
         self.timeQuery(startDt,endDt)
         full_query = self.pareseSql()
         df = self._engine.query(full_query)
-        transfer = TransformationFunction(self,data_format,outputLoc)
-        transfer.save(data_format,df,None)
+        transfer = TransformationFunction(self,outputLoc)
+        transfer.save(df,data_format)
 
 
 

@@ -1,5 +1,5 @@
 from pyspark.mllib.util import MLUtils
-from emr_fs.common import *
+from emr_fs.common.logger import Log
 from pyspark.context import SparkContext, SparkConf
 
 
@@ -15,10 +15,11 @@ class TransformationFunction:
 
 
 
-   def save(self, df, format='tfrecords',path="s3://"):
+   def save(self, df, format='tfrecords'):
         """
             transformate the feature store dataset into output format and landing to target location.
         """
+        path=self._s3_target_path
         if path is not None:
             if format == 'tfrecords':
                 path=path+".tfrecords"
@@ -30,6 +31,9 @@ class TransformationFunction:
             elif format == 'csv':
                 path=path+".csv"
                 df.write.format("csv").mode("overwrite").save(path)
+        else:
+            self.logger.error("not define output path!")
+            print("not define output path!")
 
 
 
