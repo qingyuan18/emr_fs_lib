@@ -35,7 +35,7 @@ if __name__ == '__main__':
    #test join
    #emr_fg01.select(["customer_id","city_code","state_code"]).join(emr_fg02.select_all(),"customer_id").show(5)
    #test train dataset retrive
-   emr_fg02.create_training_dataset(name = "userProfile dataset",\
+   emr_fg02.select_all().create_training_dataset(name = "userProfile dataset",\
                data_format = "tfrecord",\
                startDt="20211201000000",\
                endDt= "20211216000000",\

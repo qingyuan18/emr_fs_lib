@@ -1,7 +1,9 @@
 import json
 import sys
-sys.path.append("../")
+from emr_fs.func.transformation_function import TransformationFunction
+#sys.path.append("../")
 from emr_fs.engine.spark.feature_store_spark_engine import FeatureStoreSparkEngine
+
 
 
 
