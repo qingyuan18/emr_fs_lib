@@ -42,11 +42,18 @@ class Query:
 
 
     def pareseSql(self):
+        #####select sction #######################
         full_query="select "
         for feature in self._features:
             full_query = full_query + feature._feature_group_name+"."+feature._name + ","
+        if len(self._join_feature_groups)!= 0:
+            for  join_feature_group in self._join_feature_groups:
+                for join_feature in join_feature_group._features:
+                    full_query = full_query + join_feature_group._feature_store._name+"."+join_feature_group._feature_group._feature_group_name +\
+                                              "."+join_feature._name + ","
         full_query=full_query[:-1]
         full_query = full_query + " from " + self._feature_group._feature_store._name+"."+self._feature_group._feature_group_name
+        #####join section##########################
         if len(self._join_feature_groups)!= 0:
             for  join_feature_group in self._join_feature_groups:
                 full_query = full_query+ " left join "+join_feature_group._feature_store._name+"."+join_feature_group._feature_group_name +\
@@ -54,6 +61,7 @@ class Query:
                                          self._feature_group._feature_unique_key +"="+join_feature_group._feature_store._name+"."+join_feature_group._feature_group_name+"."+self._join_feature_group_keys[join_feature_group._feature_group_name]
                 full_query = full_query + ","
             full_query=full_query[:-1]
+        ######where section ######################
         if self._sqlWhere != "":
             full_query=full_query+" where "+self._sqlWhere
         print("full_query sql is:"+full_query)
@@ -90,8 +98,8 @@ class Query:
         """
         self._join_feature_groups.append(query._feature_group)
         self._join_feature_group_keys[query._feature_group._feature_group_name]=join_key
-        if query._sqlWhere is not None:
-           self._sqlWhere = " and " + self._sqlWhere
+        if query._sqlWhere !="":
+           self._sqlWhere = self._sqlWhere+" and " + query._sqlWhere
         return self
 
     def timeQuery(self,begin_timestamp,end_timestamp):
