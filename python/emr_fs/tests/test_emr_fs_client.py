@@ -22,15 +22,15 @@ if __name__ == '__main__':
    emr_fg02.print_info()
 
    #test feature group ingestion
-   #source_feature_group_dataset = "s3://emrfssampledata/feature_store_introduction_custs.csv"
-   #emr_fg01.ingestion(source_feature_group_dataset)
+   source_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_base.csv"
+   emr_fg01.ingestion(source_feature_group_dataset,"overwrite")
    #source_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_advance.csv"
    #emr_fg02.ingestion(source_feature_group_dataset)
 
    #test add feature
    emr_fg01.add_feature("identify_code","string")
    update_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_base_update.csv"
-   emr_fg01.ingestion(update_feature_group_dataset)
+   emr_fg01.ingestion(update_feature_group_dataset,"append")
 
    #test query feature group
    #emr_fg01.select_all().show(0)
