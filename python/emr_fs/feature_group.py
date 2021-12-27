@@ -77,7 +77,7 @@ class FeatureGroup:
                            self._feature_partition_key)
 
     def print_info(self):
-        print("*************feature group details*************************")
+        print("*************feature group details*************")
         print("feature store name:"+self._feature_store._name)
         print("feature group name:"+self._feature_group_name)
         print("feature_unique_key:"+self._feature_unique_key)
@@ -97,6 +97,12 @@ class FeatureGroup:
             self._query = Query(self._feature_store,self,'spark',None)
         self._query.create_training_dataset(name,data_format,startDt,endDt,outputLoc)
 
+    def add_feature(self, new_feature_name,new_feature_type):
+        new_feature = Feature(self._feature_group_name,new_feature_name,new_feature_type)
+        with FeatureStoreSparkEngine() as engine:
+            engine.append_features(self._feature_store._name, self._feature_group_name, new_feature_name,new_feature_type)
+        self._features.append(new_feature)
+        print("added new feature:"+new_feature_name+" "+new_feature_type)
 
     def get_feature(self, name: str):
         """Retrieve a `Feature` object from the schema of the feature group.

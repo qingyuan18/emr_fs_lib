@@ -15,14 +15,14 @@ class TransformationFunction:
 
 
 
-   def save(self, df, format='tfrecords'):
+   def save(self, df, format):
         """
             transformate the feature store dataset into output format and landing to target location.
         """
         path=self._s3_target_path
         if path is not None:
-            if format == 'tfrecords':
-                path=path+".tfrecords"
+            if format == 'tfrecord':
+                path=path+".tfrecord"
                 df.write.format("tfrecord").option("recordType", "Example").mode("overwrite").save(path)
             elif format == 'libsvm':
                 path=path+".libsvm"
@@ -31,6 +31,9 @@ class TransformationFunction:
             elif format == 'csv':
                 path=path+".csv"
                 df.write.format("csv").mode("overwrite").save(path)
+            else:
+                self.logger.error("not support format:"+format)
+                print("not support format:"+format)
         else:
             self.logger.error("not define output path!")
             print("not define output path!")

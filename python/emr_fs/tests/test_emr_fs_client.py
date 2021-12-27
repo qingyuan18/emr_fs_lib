@@ -38,8 +38,8 @@ if __name__ == '__main__':
    emr_fg02.select_all().create_training_dataset(name = "userProfile dataset",\
                data_format = "tfrecord",\
                startDt="20211201000000",\
-               endDt= "20211216000000",\
-               outputLoc = "s3://emrfssampledata/traindataset/output.tfrecord/")
+               endDt= "20211228000000",\
+               outputLoc = "s3://emrfssampledata/traindataset/output")
 
 
 
