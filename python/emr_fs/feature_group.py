@@ -1,6 +1,7 @@
 import numpy as np
 from emr_fs.engine.spark.feature_store_spark_engine import FeatureStoreSparkEngine
 from emr_fs.func.query import Query
+from emr_fs.feature import Feature
 
 
 
