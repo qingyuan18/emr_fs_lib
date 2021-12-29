@@ -49,7 +49,8 @@ class Query:
         #####select sction #######################
         full_query="select "
         for feature in self._features:
-            full_query = full_query + feature._feature_group_name+"."+feature._name + ","
+            if feature._feature_group_name == self._feature_group._feature_group_name:
+                full_query = full_query + self._feature_group._feature_store._name+"."+self._feature_group._feature_group_name+"."+feature._name + ","
         if len(self._join_feature_groups)!= 0:
             for  join_feature_group in self._join_feature_groups:
                 for feature in self._features:

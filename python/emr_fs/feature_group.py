@@ -27,22 +27,20 @@ class FeatureGroup:
         # Returns
             `Query`. A query object with all features of the feature group.
         """
-        if self._query is None:
-          self._query = Query(self._feature_store,self,'spark',None)
+        self._query = Query(self._feature_store,self,'spark',None)
         self._query.select_all()
         return self._query
 
     def timeQuery(self,beginTimeStamp,endTimeStamp):
         if self._query is None:
            self._query = Query(self._feature_store,self,'spark',None)
-           self._query.timeQuery(beginTimeStamp,endTimeStamp)
+        self._query.timeQuery(beginTimeStamp,endTimeStamp)
         return self._query
 
     def select(self, features):
        """Select a subset of features of the feature group and return a query object.
        """
-       if self._query is None:
-          self._query = Query(self._feature_store,self,'spark',None)
+       self._query = Query(self._feature_store,self,'spark',None)
        filtedFeatures=[]
        for feature_name in features:
           for feature in self._features:
