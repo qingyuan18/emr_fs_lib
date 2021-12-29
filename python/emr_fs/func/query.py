@@ -31,6 +31,7 @@ class Query:
     def select_all(self):
         """select all the feature group dataset.
         """
+        self._features=[]
         for feature in self._feature_group._features:
              self._features.append(feature)
         return self
@@ -38,6 +39,7 @@ class Query:
     def select(self,features=[]):
         """select subset of the feature group dataset.
         """
+        self._features=[]
         for feature in features:
             self._features.append(feature)
         return self
@@ -87,6 +89,7 @@ class Query:
         self.timeQuery(startDt,endDt)
         full_query = self.pareseSql()
         df = self._engine.query(full_query)
+        print("here1==="+str(df.count()))
         transfer = TransformationFunction(self,outputLoc)
         transfer.save(df,data_format)
 

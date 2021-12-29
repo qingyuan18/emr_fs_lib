@@ -171,6 +171,7 @@ class FeatureStoreSparkEngine:
             hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
             dataframe = self._spark_session.read.format("csv").option("header", "true").load(source_s3_location)
             print(hudi_options)
+            #
             try:
                 dataframe.write.format("org.apache.hudi").options(**hudi_options).mode(mode).save(feature_group_location)
             except  Exception as e:
