@@ -52,9 +52,10 @@ class Query:
             full_query = full_query + feature._feature_group_name+"."+feature._name + ","
         if len(self._join_feature_groups)!= 0:
             for  join_feature_group in self._join_feature_groups:
-                for join_feature in join_feature_group._features:
-                    full_query = full_query + join_feature_group._feature_store._name+"."+join_feature_group._feature_group_name +\
-                                              "."+join_feature._name + ","
+                for feature in self._features:
+                  if feature._feature_group_name == join_feature_group._feature_group_name:
+                      full_query = full_query + join_feature_group._feature_store._name+"."+join_feature_group._feature_group_name +\
+                                              "."+feature._name + ","
         full_query=full_query[:-1]
         full_query = full_query + " from " + self._feature_group._feature_store._name+"."+self._feature_group._feature_group_name
         #####join section##########################
@@ -103,6 +104,8 @@ class Query:
         """
         self._join_feature_groups.append(query._feature_group)
         self._join_feature_group_keys[query._feature_group._feature_group_name]=join_key
+        for join_feature in query._features:
+            self._features.append(join_feature)
         if query._sqlWhere !="":
            self._sqlWhere = self._sqlWhere+" and " + query._sqlWhere
         return self
