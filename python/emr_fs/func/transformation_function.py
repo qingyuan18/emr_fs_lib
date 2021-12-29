@@ -1,4 +1,6 @@
 from pyspark.mllib.util import MLUtils
+from pyspark.mllib.linalg import Vectors
+from pyspark.mllib.regression import LabeledPoint
 from emr_fs.common.logger import Log
 from pyspark.context import SparkContext, SparkConf
 import time
