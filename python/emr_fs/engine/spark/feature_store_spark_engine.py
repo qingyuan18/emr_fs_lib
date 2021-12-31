@@ -12,7 +12,8 @@ try:
 except ImportError:
     pass
 from emr_fs.exceptions import FeatureStoreException
-from emr_fs.common.logger import Log
+#from emr_fs.common.logger import Log
+import logging
 from emr_fs.engine.spark.hudi_engine import HudiEngine
 
 
@@ -29,7 +30,7 @@ class FeatureStoreSparkEngine:
         self._spark_session.conf.set("hive.exec.dynamic.partition", "true")
         self._spark_session.conf.set("hive.exec.dynamic.partition.mode", "nonstrict")
         self._spark_session.conf.set("spark.sql.hive.convertMetastoreParquet", "false")
-        self.logger = Log("file")
+        self.logger = logging
         #print("here1====")
         #print(self._spark_session)
 

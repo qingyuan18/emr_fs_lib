@@ -5,7 +5,8 @@ sys.path.append("./func/")
 sys.path.append("./engine/")
 sys.path.append("./common/")
 from emr_fs.func.transformation_function import TransformationFunction
-from emr_fs.common.logger import *
+#from emr_fs.common.logger import *
+import logging
 from emr_fs.feature_group import FeatureGroup
 from emr_fs.feature_store import FeatureStore
 
@@ -20,7 +21,7 @@ class Client(object):
     def __init__(self):
         self._feature_group = None
         self._feature_store = None
-        self.logger = Log("console")
+        self.logger = logging
 
     def create_feature_store(self,name,s3_location_path,desc):
         self._feature_store = FeatureStore(name,s3_location_path,desc)

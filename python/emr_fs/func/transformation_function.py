@@ -1,7 +1,8 @@
 from pyspark.mllib.util import MLUtils
 from pyspark.mllib.linalg import Vectors
 from pyspark.mllib.regression import LabeledPoint
-from emr_fs.common.logger import Log
+#from emr_fs.common.logger import Log
+import logging
 from pyspark.context import SparkContext, SparkConf
 import time
 
@@ -14,7 +15,7 @@ class TransformationFunction:
    ):
         self._query = query
         self._s3_target_path = s3_target_path
-        self.logger = Log("file")
+        self.logger = logging
 
 
 
