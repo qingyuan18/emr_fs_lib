@@ -12,8 +12,8 @@ class Query:
         self,
         feature_store,
         feature_group,
-        engine_type='spark',
-        emr_master_node=None,
+        engine_type,
+        emr_master_node,
         engine_mode
     ):
         self._feature_store = feature_store

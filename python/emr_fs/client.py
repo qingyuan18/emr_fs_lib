@@ -10,13 +10,14 @@ import logging
 from emr_fs.feature_group import FeatureGroup
 from emr_fs.feature_store import FeatureStore
 
-class Client(object):
+class Client:
     _instance = None
 
-    def __new__(cls, *args, **kw):
-         if cls._instance is None:
-            cls._instance = object.__new__(cls, *args, **kw)
-         return cls._instance
+    @classmethod
+    def create(cls,engine_mode):
+        if cls._instance is None:
+            cls._instance = cls(engine_mode)
+        return cls._instance
 
     def __init__(self,engine_mode):
         self._feature_group = None
