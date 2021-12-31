@@ -3,7 +3,7 @@ from emr_fs.feature_store import FeatureStore
 from emr_fs.client import Client
 
 if __name__ == '__main__':
-   client=Client()
+   client=Client("cluster")
    #test create feature store
    #emr_fs01 = client.create_feature_store("emr_feature_store","s3://emrfssampledata/emr_feature_store/","emr feature store test")
    #test connect to feature store

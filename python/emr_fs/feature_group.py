@@ -6,7 +6,9 @@ from emr_fs.feature import Feature
 
 
 class FeatureGroup:
-    def __init__(self, feature_store,feature_group_name,feature_group_desc,feature_unique_key,feature_partition_key,features):
+    def __init__(self, feature_store,feature_group_name,
+                       feature_group_desc,feature_unique_key,
+                       feature_partition_key,features,engine_mode):
         self._feature_store = feature_store
         self._feature_group_name = feature_group_name
         self._feature_group_desc = feature_group_desc
@@ -14,10 +16,11 @@ class FeatureGroup:
         self._feature_partition_key = feature_partition_key
         self._features = features
         self._query = None
+        self._engine_mode=engine_mode
 
 
     def delete(self):
-        with FeatureStoreSparkEngine(emr_master_node) as engine:
+        with FeatureStoreSparkEngine(self._engine_mode) as engine:
              engine.delete(self.feature_group_name)
 
     def select_all(self):
@@ -27,20 +30,20 @@ class FeatureGroup:
         # Returns
             `Query`. A query object with all features of the feature group.
         """
-        self._query = Query(self._feature_store,self,'spark',None)
+        self._query = Query(self._feature_store,self,'spark',None,self._engine_mode)
         self._query.select_all()
         return self._query
 
     def timeQuery(self,beginTimeStamp,endTimeStamp):
         if self._query is None:
-           self._query = Query(self._feature_store,self,'spark',None)
+           self._query = Query(self._feature_store,self,'spark',None,self._engine_mode)
         self._query.timeQuery(beginTimeStamp,endTimeStamp)
         return self._query
 
     def select(self, features):
        """Select a subset of features of the feature group and return a query object.
        """
-       self._query = Query(self._feature_store,self,'spark',None)
+       self._query = Query(self._feature_store,self,'spark',None,self._engine_mode)
        filtedFeatures=[]
        for feature_name in features:
           for feature in self._features:
@@ -51,7 +54,7 @@ class FeatureGroup:
     def ingestion(self,dataframe):
        """use spark engine(which will use hudi engine internal) to ingest  into feature group"""
        feature_group_location = self._feature_store._s3_store_path+"/"+self._feature_group_name+"/"
-       with FeatureStoreSparkEngine() as engine:
+       with FeatureStoreSparkEngine(self._engine_mode) as engine:
             engine.save_dataframe(
                            self._feature_group_name,
                            feature_group_location,
@@ -65,7 +68,7 @@ class FeatureGroup:
        feature_group_location = self._feature_store._s3_store_path+"/"+self._feature_group_name+"/"
        print("feature_partition_key:"+self._feature_partition_key)
        print("feature_unique_key:"+self._feature_unique_key)
-       with FeatureStoreSparkEngine() as engine:
+       with FeatureStoreSparkEngine(self._engine_mode) as engine:
             engine.save_s3_dataset(
                            self._feature_store._name,
                            self._feature_group_name,
@@ -74,7 +77,8 @@ class FeatureGroup:
                            mode,
                            "upsert",
                            self._feature_unique_key,
-                           self._feature_partition_key)
+                           self._feature_partition_key,
+                           self._features)
 
     def print_info(self):
         print("*************feature group details*************")
@@ -94,12 +98,12 @@ class FeatureGroup:
             endDt,
             outputLoc ):
         if self._query is None:
-            self._query = Query(self._feature_store,self,'spark',None)
+            self._query = Query(self._feature_store,self,'spark',None,self._engine_mode)
         self._query.create_training_dataset(name,data_format,startDt,endDt,outputLoc)
 
     def add_feature(self, new_feature_name,new_feature_type):
         new_feature = Feature(self._feature_group_name,new_feature_name,new_feature_type)
-        with FeatureStoreSparkEngine() as engine:
+        with FeatureStoreSparkEngine(self._engine_mode) as engine:
             engine.append_features(self._feature_store._name, self._feature_group_name, new_feature_name,new_feature_type)
         self._features.append(new_feature)
         print("added new feature:"+new_feature_name+" "+new_feature_type)

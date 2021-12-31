@@ -13,7 +13,8 @@ class Query:
         feature_store,
         feature_group,
         engine_type='spark',
-        emr_master_node=None
+        emr_master_node=None,
+        engine_mode
     ):
         self._feature_store = feature_store
         self._feature_group = feature_group
@@ -24,7 +25,7 @@ class Query:
         self._sqlJoin = ""
         self._sqlWhere = ""
         if engine_type == "spark":
-           self._engine = FeatureStoreSparkEngine()
+           self._engine = FeatureStoreSparkEngine(engine_mode)
         else:
            self._engine=FeatureStoreHiveEngine(emr_master_node)
 
@@ -91,7 +92,6 @@ class Query:
         self.timeQuery(startDt,endDt)
         full_query = self.pareseSql()
         df = self._engine.query(full_query)
-        print("here1==="+str(df.count()))
         transfer = TransformationFunction(self,outputLoc)
         transfer.save(df,data_format)
 

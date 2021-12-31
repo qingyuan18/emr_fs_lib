@@ -22,7 +22,7 @@ class FeatureStoreSparkEngine:
     APPEND = "append"
     OVERWRITE = "overwrite"
 
-    def __init__(self):
+    def __init__(self,mode):
         self._spark_session = SparkSession.builder.appName("emr_feature_store app").master("yarn").config("spark.submit.deployMode","client")\
                                                    .config("spark.serializer","org.apache.spark.serializer.KryoSerializer")\
                                                    .enableHiveSupport().getOrCreate()
@@ -31,6 +31,7 @@ class FeatureStoreSparkEngine:
         self._spark_session.conf.set("hive.exec.dynamic.partition.mode", "nonstrict")
         self._spark_session.conf.set("spark.sql.hive.convertMetastoreParquet", "false")
         self.logger = logging
+        self._mode = mode
         #print("here1====")
         #print(self._spark_session)
 
@@ -38,7 +39,8 @@ class FeatureStoreSparkEngine:
         return self
 
     def __exit__(self, exc_type, exc_value, tb):
-        self._spark_session.stop()
+        if self._mode=="local":
+           self._spark_session.stop()
         return True
 
     def executeSql(self,sqlStr):
@@ -166,12 +168,16 @@ class FeatureStoreSparkEngine:
             mode,
             operation,
             feature_unique_key,
-            feature_partition_key
+            feature_partition_key,
+            features
         ):
             hudi_engine = HudiEngine(feature_store_name,feature_group_name,self._spark_context,self._spark_session)
             hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
             dataframe = self._spark_session.read.format("csv").option("header", "true").load(source_s3_location)
-            print(hudi_options)
+            ### change column type based on features mapping######
+            for feature in features:
+                dataframe.withColumn(feature._name,col(feature._name).cast(feature._type))
+            #print(hudi_options)
             #
             try:
                 dataframe.write.format("org.apache.hudi").options(**hudi_options).mode(mode).save(feature_group_location)

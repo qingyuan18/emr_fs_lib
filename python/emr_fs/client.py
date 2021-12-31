@@ -18,18 +18,19 @@ class Client(object):
             cls._instance = object.__new__(cls, *args, **kw)
          return cls._instance
 
-    def __init__(self):
+    def __init__(self,engine_mode):
         self._feature_group = None
         self._feature_store = None
+        self._engine_mode = engine_mode
         self.logger = logging
 
     def create_feature_store(self,name,s3_location_path,desc):
-        self._feature_store = FeatureStore(name,s3_location_path,desc)
+        self._feature_store = FeatureStore(name,s3_location_path,desc,self._engine_mode)
         self._feature_store.create_feature_store()
         return self._feature_store
 
     def connect_to_feature_store(self,name):
-        self._feature_store = FeatureStore(None,None,None).connect_to_feature_store(name)
+        self._feature_store = FeatureStore(None,None,None,self._engine_mode).connect_to_feature_store(name)
         return self._feature_store
 
     def get_feature_group(self,name):

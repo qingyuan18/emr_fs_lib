@@ -15,14 +15,16 @@ class FeatureStore:
         featurestore_name,
         s3_store_path,
         featurestore_description,
+        engine_mode
     ):
         self._name = featurestore_name
         self._description = featurestore_description
         self._s3_store_path = s3_store_path
+        self._engine_mode = engine_mode
 
 
     def connect_to_feature_store(self,feature_store_name):
-        with FeatureStoreSparkEngine() as engine:
+        with FeatureStoreSparkEngine(self._engine_mode) as engine:
              feature_store_info = engine.executeSql("desc database "+feature_store_name)
              self._name = feature_store_info.split(",")[0]
              otherInfo = feature_store_info.split(",")[1:]
@@ -36,7 +38,7 @@ class FeatureStore:
     def get_feature_group(self, feature_group_name):
         feature_group = None
         feature_group_info=""
-        with FeatureStoreSparkEngine() as engine:
+        with FeatureStoreSparkEngine(self._engine_mode) as engine:
             feature_group_info =  engine.get_feature_group(self._name,feature_group_name)
         feature_unique_key = ""
         feature_partition_key = ""
@@ -85,7 +87,7 @@ class FeatureStore:
         #        name=self._name,
         #        desc=self._description,
         #        location=self._s3_store_path)
-        with FeatureStoreSparkEngine() as engine:
+        with FeatureStoreSparkEngine(self._engine_mode) as engine:
             engine.create_feature_store(self._name,self._description,self._s3_store_path)
         return FeatureStore(self._name,self._description,self._s3_store_path)
 
@@ -107,7 +109,7 @@ class FeatureStore:
        #           feature_partition_key,feature_partition_key_type,
        #           feature_normal_keys)
        #            )
-       with FeatureStoreSparkEngine() as engine:
+       with FeatureStoreSparkEngine(self._engine_mode) as engine:
              engine.register_feature_group(self._name,feature_group_name, desc,
                   feature_unique_key,
                   feature_partition_key)
@@ -134,7 +136,7 @@ class FeatureStore:
         #           feature_partition_key,feature_partition_key_type,
         #           feature_normal_keys)
         #    )
-        with FeatureStoreSparkEngine() as engine:
+        with FeatureStoreSparkEngine(self._engine_mode) as engine:
              engine.create_feature_group(self._name,feature_group_name, desc,
                           feature_unique_key,
                           feature_partition_key,
