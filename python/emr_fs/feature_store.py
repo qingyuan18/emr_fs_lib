@@ -73,7 +73,7 @@ class FeatureStore:
                     feature_unique_key=property.split("=")[1].strip().replace("`","").replace("'","")
                 elif 'feature_partition_key' in property:
                     feature_partition_key=property.split("=")[1].strip().replace("`","").replace("'","")
-        feature_group = FeatureGroup(self,feature_group_name,"",feature_unique_key,feature_partition_key,features)
+        feature_group = FeatureGroup(self,feature_group_name,"",feature_unique_key,feature_partition_key,features,self._engine_mode)
         return feature_group
 
 
@@ -144,7 +144,7 @@ class FeatureStore:
                           self._s3_store_path+"/"+feature_group_name)
         features = pares_features(feature_group_name,feature_keys)
         print("created feature group:"+feature_group_name)
-        return FeatureGroup(self,feature_group_name,desc,feature_unique_key,feature_partition_key,features)
+        return FeatureGroup(self,feature_group_name,desc,feature_unique_key,feature_partition_key,features,self._engine_mode)
 
 
 
