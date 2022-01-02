@@ -5,6 +5,7 @@ import numpy as np
 
 # in case importing in %%local
 try:
+    from pyspark.sql.types import ArrayType, StructField, StructType, StringType, IntegerType, DecimalType
     from pyspark.sql import SparkSession, DataFrame
     from pyspark.rdd import RDD
     from pyspark.sql.column import Column, _to_java_column
@@ -174,12 +175,12 @@ class FeatureStoreSparkEngine:
             hudi_engine = HudiEngine(feature_store_name,feature_group_name,self._spark_context,self._spark_session)
             hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
             dataframe = self._spark_session.read.format("csv").option("header", "true").load(source_s3_location)
-            ### change column type based on features mapping######
-            for feature in features:
-                dataframe.withColumn(feature._name,col(feature._name).cast(feature._type))
-            #print(hudi_options)
-            #
             try:
+            ### change column type based on features mapping######
+                for feature in features:
+                    dataframe=dataframe.withColumn(feature._name,dataframe[feature._name].cast(feature._type))
+                #print(hudi_options)
+                print(dataframe.printSchema())
                 dataframe.write.format("org.apache.hudi").options(**hudi_options).mode(mode).save(feature_group_location)
             except  Exception as e:
                 raise FeatureStoreException(
