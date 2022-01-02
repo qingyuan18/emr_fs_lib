@@ -11,12 +11,12 @@ if __name__ == '__main__':
 
 
    #test create feature group
-   features01={"customer_id":"int","city_code":"int","state_code":"int","country_code":"string","dt":"string"}
+   features01={"customer_id":"string","city_code":"string","state_code":"string","country_code":"string","dt":"string"}
    emr_fg01 = client.create_feature_group("customer_base","","customer_id","dt",features01)
    #emr_fg01 = emr_fs01.get_feature_group("customer_base")
    emr_fg01.print_info()
 
-   features02 = {"customer_id":"int",	"age":"int","diabetes":"string","ejection_fraction":"string",	"high_blood_pressure":"string","platelets":"string","sex":"string","smoking":"string","DEATH_EVENT":"string","dt":"string"}
+   features02 = {"customer_id":"string",	"age":"string","diabetes":"string","ejection_fraction":"string",	"high_blood_pressure":"string","platelets":"string","sex":"string","smoking":"string","DEATH_EVENT":"string","dt":"string"}
    emr_fg02 = client.create_feature_group("customer_advance","","customer_id","dt",features02)
    #emr_fg02= emr_fs01.get_feature_group("customer_advance")
    emr_fg02.print_info()
