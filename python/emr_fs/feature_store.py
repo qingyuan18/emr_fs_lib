@@ -113,7 +113,7 @@ class FeatureStore:
              engine.register_feature_group(self._name,feature_group_name, desc,
                   feature_unique_key,
                   feature_partition_key)
-             return get_feature_group(self._name, feature_group_name)
+             return self.get_feature_group(feature_group_name)
 
 
 
