@@ -3,11 +3,11 @@ from emr_fs.feature_store import FeatureStore
 from emr_fs.client import Client
 
 if __name__ == '__main__':
-   client=Client.create("kernal")
+   client=Client.create("local")
    #test create feature store
-   emr_fs01 = client.create_feature_store("emr_feature_store","s3://emrfssampledata/emr_feature_store/","emr feature store test")
+   #emr_fs01 = client.create_feature_store("emr_feature_store","s3://emrfssampledata/emr_feature_store/","emr feature store test")
    #test connect to feature store
-   #emr_fs01 = client.connect_to_feature_store("emr_feature_store")
+   emr_fs01 = client.connect_to_feature_store("emr_feature_store")
 
 
    #test create feature group

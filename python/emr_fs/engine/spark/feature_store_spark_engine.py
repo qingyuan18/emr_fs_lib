@@ -79,9 +79,7 @@ class FeatureStoreSparkEngine:
           self._spark_session.sql(sql)
           sql = "alter table  "+feature_store_name+".@feature_group_nm@ set tblproperties ('feature_partition_key'='@feature_partition_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_partition_key@",feature_partition_key)
           df=self._spark_session.sql(sql)
-          self.logger.info("register emr feature group "+feature_group_name + "in "+ feature_store_name+" result:")
-          for line in df.collect():
-              self.logger.info(line)
+          self.logger.warn("register emr feature group "+feature_group_name + "in "+ feature_store_name)
         except  Exception as e:
           print(str(e))
           self.logger.error(str(e))
