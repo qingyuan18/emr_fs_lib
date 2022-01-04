@@ -14,7 +14,6 @@ setuptools.setup(
     url="https://github.com/qingyuan18/emr_fs",
     packages=setuptools.find_packages(),
     install_requires=['numpy',
-                      'spark-tensorflow-distributor',
                       'pandas',
                       'pyhive',
                       'thrift'],
