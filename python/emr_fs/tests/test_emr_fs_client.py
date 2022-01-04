@@ -11,21 +11,25 @@ if __name__ == '__main__':
 
 
    #test create feature group
-   features01={"customer_id":"Int","city_code":"Int","state_code":"string","country_code":"string","dt":"string"}
-   emr_fg01 = client.create_feature_group("customer_base","","customer_id","dt",features01)
+   #features01={"customer_id":"Int","city_code":"Int","state_code":"string","country_code":"string","dt":"string"}
+   #emr_fg01 = client.create_feature_group("customer_base","","customer_id","dt",features01)
    #emr_fg01 = emr_fs01.get_feature_group("customer_base")
-   emr_fg01.print_info()
+   #emr_fg01.print_info()
 
-   features02 = {"customer_id":"Int",	"age":"Int","diabetes":"string","ejection_fraction":"string",	"high_blood_pressure":"string","platelets":"string","sex":"string","smoking":"string","death_event":"string","dt":"string"}
-   emr_fg02 = client.create_feature_group("customer_advance","","customer_id","dt",features02)
+   #features02 = {"customer_id":"Int",	"age":"Int","diabetes":"string","ejection_fraction":"string",	"high_blood_pressure":"string","platelets":"string","sex":"string","smoking":"string","death_event":"string","dt":"string"}
+   #emr_fg02 = client.create_feature_group("customer_advance","","customer_id","dt",features02)
    #emr_fg02= emr_fs01.get_feature_group("customer_advance")
-   emr_fg02.print_info()
+   #emr_fg02.print_info()
+
+   #test register feature group
+   emr_fg03 = emr_fs01.register_feature_group("customer_advance","","customer_id","dt")
+   emr_fg03.print_info()
 
    #test feature group ingestion
-   source_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_base.csv"
-   emr_fg01.ingestion(source_feature_group_dataset,"overwrite")
-   source_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_advance.csv"
-   emr_fg02.ingestion(source_feature_group_dataset,"overwrite")
+   #source_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_base.csv"
+   #emr_fg01.ingestion(source_feature_group_dataset,"overwrite")
+   #source_feature_group_dataset = "s3://emrfssampledata/feature_store_customer_advance.csv"
+   #emr_fg02.ingestion(source_feature_group_dataset,"overwrite")
 
    #test add feature
    #emr_fg01.add_feature("identify_code","int")
@@ -38,7 +42,7 @@ if __name__ == '__main__':
    #test feature group time travel query
    #emr_fg01.select_all().timeQuery("20211201000000","20211216000000").show(0)
    #test join
-   emr_fg01.select(["customer_id","city_code","state_code"]).join(emr_fg02.select(["age","diabetes"]),"customer_id").show(5)
+   #emr_fg01.select(["customer_id","city_code","state_code"]).join(emr_fg02.select(["age","diabetes"]),"customer_id").show(5)
    #test train dataset retrive
    #emr_fg02.select_all().create_training_dataset(name = "userProfile dataset",\
    #            data_format = "tfrecord",\

@@ -75,10 +75,9 @@ class FeatureStoreSparkEngine:
                                  feature_unique_key,
                                  feature_partition_key):
         try:
-          self._spark_session.sql("use "+feature_store_name+";")
-          sql = "alter table  @feature_group_nm@ set tblproperties ('feature_unique_key'='@feature_unique_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_unique_key@",feature_unique_key)
+          sql = "alter table  "+feature_store_name+".@feature_group_nm@ set tblproperties ('feature_unique_key'='@feature_unique_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_unique_key@",feature_unique_key)
           self._spark_session.sql(sql)
-          sql = "alter table  @feature_group_nm@ set tblproperties ('feature_partition_key'='@feature_partition_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_partition_key@",feature_partition_key)
+          sql = "alter table  "+feature_store_name+".@feature_group_nm@ set tblproperties ('feature_partition_key'='@feature_partition_key@')".replace("@feature_group_nm@",feature_group_name).replace("@feature_partition_key@",feature_partition_key)
           df=self._spark_session.sql(sql)
           self.logger.info("register emr feature group "+feature_group_name + "in "+ feature_store_name+" result:")
           for line in df.collect():
