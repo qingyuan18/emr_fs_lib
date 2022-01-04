@@ -33,8 +33,7 @@ class FeatureStoreSparkEngine:
         self._spark_session.conf.set("spark.sql.hive.convertMetastoreParquet", "false")
         self.logger = logging
         self._mode = mode
-        #print("here1====")
-        #print(self._spark_session)
+
 
     def __enter__(self):
         return self
