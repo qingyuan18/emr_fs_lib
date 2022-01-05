@@ -14,14 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}
+export SPARK_HOME=${SPARK_HOME:-/opt/spark}
 export SPARK_LOG_DIR=${SPARK_LOG_DIR:-/var/log/spark}
 export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
-export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
-export HIVE_CONF_DIR=${HIVE_CONF_DIR:-/etc/hive/conf}
-export HUDI_CONF_DIR=${HUDI_CONF_DIR:-/etc/hudi/conf}
+export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/opt/spark/conf}
+export HIVE_CONF_DIR=${HIVE_CONF_DIR:-/opt/spark/conf}
+export HUDI_CONF_DIR=${HUDI_CONF_DIR:-/opt/spark/conf}
 
-export STANDALONE_SPARK_MASTER_HOST=ip-10-0-0-83.ap-southeast-1.compute.internal
+export STANDALONE_SPARK_MASTER_HOST=10.0.0.83
 export SPARK_MASTER_PORT=7077
 export SPARK_MASTER_IP=$STANDALONE_SPARK_MASTER_HOST
 export SPARK_MASTER_WEBUI_PORT=8080
@@ -35,5 +35,5 @@ export HIVE_SERVER2_THRIFT_PORT=10001
 
 
 export SPARK_DAEMON_JAVA_OPTS="$SPARK_DAEMON_JAVA_OPTS -XX:+ExitOnOutOfMemoryError"
-export SPARK_PUBLIC_DNS=ip-10-0-0-83.ap-southeast-1.compute.internal
-export PYSPARK_PYTHON=/usr/bin/python3
+export SPARK_PUBLIC_DNS=10.0.0.83
+export PYSPARK_PYTHON=/usr/bin/python3.5
