@@ -36,4 +36,4 @@ export HIVE_SERVER2_THRIFT_PORT=10001
 
 export SPARK_DAEMON_JAVA_OPTS="$SPARK_DAEMON_JAVA_OPTS -XX:+ExitOnOutOfMemoryError"
 export SPARK_PUBLIC_DNS=10.0.0.83
-export PYSPARK_PYTHON=/usr/bin/python3.5
+export PYSPARK_PYTHON=/usr/local/bin/python3.7
