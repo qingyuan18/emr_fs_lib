@@ -16,8 +16,8 @@
 
 export SPARK_HOME=${SPARK_HOME:-/opt/spark}
 export SPARK_LOG_DIR=${SPARK_LOG_DIR:-/var/log/spark}
-export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
-export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/opt/spark/conf}
+export HADOOP_HOME=${HADOOP_HOME:-/opt/hadoop}
+export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/opt/hadoop/etc/hadoop}
 export HIVE_CONF_DIR=${HIVE_CONF_DIR:-/opt/spark/conf}
 export HUDI_CONF_DIR=${HUDI_CONF_DIR:-/opt/spark/conf}
 
