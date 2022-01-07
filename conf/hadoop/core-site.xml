@@ -21,7 +21,7 @@
   <property>
     <!-- URI of NN. Fully qualified. No IP.-->
     <name>fs.defaultFS</name>
-    <value>hdfs://ip-10-0-0-83.ap-southeast-1.compute.internal:8020</value>
+    <value>hdfs://10.0.0.83:8020</value>
   </property>
 
 
@@ -151,7 +151,7 @@
 
   <property>
     <name>hadoop.security.key.provider.path</name>
-    <value>kms://http@ip-10-0-0-83.ap-southeast-1.compute.internal:9600/kms</value>
+    <value>kms://http@10.0.0.83:9600/kms</value>
   </property>
 
   <property>
