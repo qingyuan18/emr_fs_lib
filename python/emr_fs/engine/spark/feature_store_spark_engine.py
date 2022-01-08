@@ -3,17 +3,11 @@ import datetime
 import importlib.util
 import numpy as np
 
-# in case importing in %%local
-try:
-    from pyspark.sql.types import ArrayType, StructField, StructType, StringType, IntegerType, DecimalType
-    from pyspark.sql import SparkSession, DataFrame
-    from pyspark.rdd import RDD
-    from pyspark.sql.column import Column, _to_java_column
-    from pyspark.sql.functions import struct, concat, col, lit
-except ImportError:
-    pass
-from emr_fs.exceptions import FeatureStoreException
-#from emr_fs.common.logger import Log
+from pyspark.sql.types import ArrayType, StructField, StructType, StringType, IntegerType, DecimalType
+from pyspark.sql import SparkSession, DataFrame
+from pyspark.rdd import RDD
+from pyspark.sql.column import Column, _to_java_column
+from pyspark.sql.functions import struct, concat, col, lit
 import logging
 from emr_fs.engine.spark.hudi_engine import HudiEngine
 
@@ -147,7 +141,8 @@ class FeatureStoreSparkEngine:
 
 
     def append_features(self, feature_store_name, feature_group_name, new_feature_key,new_feature_key_type):
-        sql = "alter table "+feature_store_name+"."+feature_group_name+" add column ('"+new_feature_key+","+new_feature_key_type+"');"
+        sql = "alter table "+feature_store_name+"."+feature_group_name+" add columns ("+new_feature_key+" "+new_feature_key_type+")"
+        print("sql==="+sql)
         try:
            df=self._spark_session.sql(sql)
            self.logger.info("add new_feature :"+new_feature_key+":"+new_feature_key_type+" in "+feature_group_name)
@@ -170,15 +165,16 @@ class FeatureStoreSparkEngine:
         ):
             hudi_engine = HudiEngine(feature_store_name,feature_group_name,self._spark_context,self._spark_session)
             hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
+            print(hudi_options)
             dataframe = self._spark_session.read.format("csv").option("header", "true").load(source_s3_location)
             try:
             ### change column type based on features mapping######
                 for feature in features:
                     dataframe=dataframe.withColumn(feature._name,dataframe[feature._name].cast(feature._type))
-                #print(hudi_options)
                 print(dataframe.printSchema())
                 dataframe.write.format("org.apache.hudi").options(**hudi_options).mode(mode).save(feature_group_location)
             except  Exception as e:
+                print("here1=="+str(e))
                 raise FeatureStoreException(
                     "Error writing to offline feature group :" + str(e)
                 )
