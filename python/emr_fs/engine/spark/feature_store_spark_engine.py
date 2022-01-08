@@ -174,7 +174,6 @@ class FeatureStoreSparkEngine:
                 print(dataframe.printSchema())
                 dataframe.write.format("org.apache.hudi").options(**hudi_options).mode(mode).save(feature_group_location)
             except  Exception as e:
-                print("here1=="+str(e))
                 raise FeatureStoreException(
                     "Error writing to offline feature group :" + str(e)
                 )
