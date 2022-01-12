@@ -2,7 +2,7 @@ import json
 import datetime
 import importlib.util
 import numpy as np
-
+import pandas as pd
 from pyspark.sql.types import ArrayType, StructField, StructType, StringType, IntegerType, DecimalType
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.rdd import RDD
@@ -190,8 +190,9 @@ class FeatureStoreSparkEngine:
     ):
         hudi_engine = HudiEngine(feature_group,self._spark_context,self._spark_session)
         hudi_options = hudi_engine._setup_hudi_write_opts(operation, primary_key=feature_unique_key,partition_key=feature_partition_key,pre_combine_key=feature_partition_key)
+        sparkDF = _spark_session.createDataFrame(dataframe)
         try:
-            dataframe.write.format("hudi").options(**hudi_options).mode("append").save(feature_group_location)
+            sparkDF.write.format("hudi").options(**hudi_options).mode("append").save(feature_group_location)
         except Exception as e:
             raise FeatureStoreException(
                 "Error writing to offline feature group :" + str(e)
