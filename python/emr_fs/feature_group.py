@@ -102,6 +102,10 @@ class FeatureGroup:
         self._query.create_training_dataset(name,data_format,startDt,endDt,outputLoc)
 
     def add_feature(self, new_feature_name,new_feature_type):
+        for feature in self._features:
+            if new_feature_name == feature._name:
+               print(new_feature_name+" already exsite！")
+               return None
         new_feature = Feature(self._feature_group_name,new_feature_name,new_feature_type)
         with FeatureStoreSparkEngine(self._engine_mode) as engine:
             engine.append_features(self._feature_store._name, self._feature_group_name, new_feature_name,new_feature_type)
